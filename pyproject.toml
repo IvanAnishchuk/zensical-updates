@@ -168,5 +168,6 @@ fail_under = 80
 show_missing = true
 exclude_lines = [
     "if __name__",
+    "if TYPE_CHECKING:",
     "pragma: no cover",
 ]
