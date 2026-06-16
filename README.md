@@ -40,10 +40,9 @@ stays under version control, and the generator never edits it.
 
 ## Install
 
-Not on PyPI yet. Pin from git:
-
 ```bash
-uv add "zensical-updates @ git+https://github.com/IvanAnishchuk/zensical-updates"
+uv add zensical-updates
+# or: pip install zensical-updates
 ```
 
 ## Configure

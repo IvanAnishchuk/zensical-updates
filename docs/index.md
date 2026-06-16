@@ -6,10 +6,9 @@ index listing, per-year archives, and tag and category pages.
 
 ## Install
 
-Not on PyPI yet. Pin from git:
-
 ```bash
-uv add "zensical-updates @ git+https://github.com/IvanAnishchuk/zensical-updates"
+uv add zensical-updates
+# or: pip install zensical-updates
 ```
 
 ## Quickstart
