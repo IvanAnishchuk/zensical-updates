@@ -1,25 +1,27 @@
 # zensical-updates
 
-Generate a dated Updates (blog) section for zensical sites as plain Markdown
+Generate a dated "Updates" (blog) section for zensical sites as plain Markdown.
+zensical has no blog plugin, so this CLI runs as a pre-build step that writes an
+index listing, per-year archives, and tag and category pages.
 
 ## Install
 
+Not on PyPI yet. Pin from git:
+
 ```bash
-uv add zensical-updates
-# or: pip install zensical-updates
+uv add "zensical-updates @ git+https://github.com/IvanAnishchuk/zensical-updates"
 ```
 
 ## Quickstart
 
-```python
-from zensical_updates import greet
-
-print(greet("world"))  # -> "Hello, world!"
+```bash
+zensical-updates build              # writes docs/<base>/
+zensical build --clean --strict
 ```
 
 ## Documentation
 
-- [Usage](usage.md) — how to use the library.
+- [Usage](usage.md) — write posts, configure, and run the build.
+- [CLI](cli.md) — the `build`/`clean` commands.
 - [API Reference](api.md) — generated from docstrings.
-- [CLI](cli.md) — the maintenance/introspection command.
 - [Changelog](changelog.md) — version history.

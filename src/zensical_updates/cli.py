@@ -29,7 +29,7 @@ console = Console()
 _RootOption = Annotated[Path, typer.Option(help="Project root holding zensical.toml.")]
 _ConfigOption = Annotated[
     Path | None,
-    typer.Option(help="Path to zensical.toml (default <root>/zensical.toml)."),
+    typer.Option(help="Path to zensical.toml (default: the project root)."),
 ]
 
 
@@ -40,7 +40,7 @@ def _resolve_config(root: Path, config: Path | None) -> Config:
 
 @app.command()
 def build(root: _RootOption = Path(), config: _ConfigOption = None) -> None:
-    """Generate the Updates section into ``docs/<base>/``."""
+    """Generate the Updates section under the site's docs directory."""
     cfg = _resolve_config(root, config)
     try:
         result = build_site(cfg, root)

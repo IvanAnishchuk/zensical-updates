@@ -24,3 +24,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `zensical build --clean --strict`, and assert every generated post,
   taxonomy, and archive link resolves to a rendered page. This guards the two
   silent failures (wrong post URLs and front-matter link reads).
+- Documentation: README and a usage guide covering how to write posts,
+  configure the generator, and run the build.
