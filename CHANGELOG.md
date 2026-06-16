@@ -10,3 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 - Initial project scaffold.
+- Post discovery and the content model: YAML front-matter parsing (block-list
+  aware), post loading (slug from file stem, date coercion, taxonomies,
+  excerpt), newest-first discovery, and grouping by category, tag, and year.
