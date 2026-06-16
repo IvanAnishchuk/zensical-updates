@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from typer.testing import CliRunner
 
+import zensical_updates as lib
 from zensical_updates.cli import app
 
 if TYPE_CHECKING:
@@ -17,7 +18,7 @@ runner = CliRunner()
 def test_version() -> None:
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert "0.1.0" in result.output
+    assert lib.__version__ in result.output
 
 
 def test_info() -> None:

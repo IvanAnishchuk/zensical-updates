@@ -7,11 +7,13 @@ type checkers (mypy `strict` / basedpyright) and the autodoc tooling.
 
 from __future__ import annotations
 
+from importlib.metadata import version
+
 from zensical_updates.build import BuildResult, build_site, clean_site
 from zensical_updates.config import Config, load_config
 from zensical_updates.model import Post, PostError, discover_posts, load_post
 
-__version__ = "0.1.0"
+__version__ = version("zensical-updates")
 
 __all__ = [
     "BuildResult",

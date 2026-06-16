@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-17
+
+### Fixed
+
+- Drop the empty gitleaks allowlist that newer gitleaks (v8.30) rejects with
+  "allowlists must contain at least one check", which failed the pre-commit CI
+  job. The standalone gitleaks action tolerated it, which masked the bug.
+
+### Changed
+
+- Source `__version__` from the installed package metadata instead of a
+  hard-coded string, so a release bumps only `pyproject.toml`; the tests no
+  longer pin the version number.
+- Bump tooling: hatchling >=1.30.1, mkdocs-typer2[zensical] >=0.4.0, and the
+  uv-pre-commit hook to 0.11.21 (dependabot).
+
 ## [0.1.0] - 2026-06-17
 
 ### Added

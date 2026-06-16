@@ -6,7 +6,8 @@ import zensical_updates as lib
 
 
 def test_version_exported() -> None:
-    assert lib.__version__ == "0.1.0"
+    assert isinstance(lib.__version__, str)
+    assert lib.__version__  # non-empty; sourced from package metadata
 
 
 def test_public_api_is_importable() -> None:
