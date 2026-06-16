@@ -49,7 +49,7 @@ dev = [
 docs = [
     "zensical>=0.0.40",
     "mkdocstrings-python>=2.0",
-    "mkdocs-typer2[zensical]>=0.3",
+    "mkdocs-typer2[zensical]>=0.4.0",
 ]
 
 [build-system]

@@ -699,16 +699,16 @@ wheels = [
 
 [[package]]
 name = "mkdocs-typer2"
-version = "0.3.1"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown" },
     { name = "pydantic" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/43/e4/696d83494855458b262329a1c77ac7d52442f1ecfbfb8386b700ccd16823/mkdocs_typer2-0.3.1.tar.gz", hash = "sha256:7415716a4c128da392bffcd5453bb60653b202b4e8c49050c45bb3699b5c98c3", size = 32353, upload-time = "2026-05-27T14:04:09.305Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6b/58/7057ee7ed0b1043bf96d5dc42b8285b8142a00d0166209816a5ace0b425c/mkdocs_typer2-0.4.0.tar.gz", hash = "sha256:b3ed54b0789963868a5a38a67517d384277667f507faba44b8463f26bd1edba1", size = 45134, upload-time = "2026-06-16T21:26:46.1Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/25/34/e0b75adb09708b514d50fdf3f12bf44ed4133dc22094943db7944910c66e/mkdocs_typer2-0.3.1-py3-none-any.whl", hash = "sha256:ed7dac5c8a1bfab4aa31a0c7a83f9ac1d53f1312c4793089ec34b686d169d7bb", size = 16437, upload-time = "2026-05-27T14:04:10.128Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/00/c4d4b39d55ebac3bc80736dfe8ed797b10aa82e0c19016de1b60648dc068/mkdocs_typer2-0.4.0-py3-none-any.whl", hash = "sha256:4924c1abb8f0483ec71a4eed00b7383a36493fef93aac07d33a9ee494ce72f05", size = 24491, upload-time = "2026-06-16T21:26:46.915Z" },
 ]
 
 [package.optional-dependencies]
@@ -1624,7 +1624,7 @@ dev = [
     { name = "zizmor", specifier = ">=1.0" },
 ]
 docs = [
-    { name = "mkdocs-typer2", extras = ["zensical"], specifier = ">=0.3" },
+    { name = "mkdocs-typer2", extras = ["zensical"], specifier = ">=0.4.0" },
     { name = "mkdocstrings-python", specifier = ">=2.0" },
     { name = "zensical", specifier = ">=0.0.40" },
 ]
