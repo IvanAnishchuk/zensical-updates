@@ -20,3 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `[project.extra.zensical_updates]` table). `build` discovers source posts,
   copies them into `docs/<base>/`, and writes the generated pages; `clean`
   removes that output. An invalid post (e.g. missing date) fails the build.
+- An end-to-end integration test: generate a fixture site, run
+  `zensical build --clean --strict`, and assert every generated post,
+  taxonomy, and archive link resolves to a rendered page. This guards the two
+  silent failures (wrong post URLs and front-matter link reads).

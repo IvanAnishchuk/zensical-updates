@@ -1608,6 +1608,7 @@ dev = [
     { name = "ruff" },
     { name = "ty" },
     { name = "types-pyyaml" },
+    { name = "zensical" },
     { name = "zizmor" },
 ]
 docs = [
@@ -1634,6 +1635,7 @@ dev = [
     { name = "ruff", specifier = ">=0.11" },
     { name = "ty" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20260518" },
+    { name = "zensical", specifier = ">=0.0.45" },
     { name = "zizmor", specifier = ">=1.0" },
 ]
 docs = [
