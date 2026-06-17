@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- RSS 2.0 feed at `docs/<base>/feed.xml`, generated when `site_url` is set. Each
+  item carries the full post HTML, rendered by zensical so it matches the site,
+  with links rewritten to fully-qualified URLs for off-site readers. Two config
+  keys control it: `emit_feed` (default true) and `feed_limit` (default 0, no cap).
+
 ## [0.1.2] - 2026-06-17
 
 ### Fixed
