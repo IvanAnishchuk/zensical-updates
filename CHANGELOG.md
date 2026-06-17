@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   review focus (URL base-path correctness, feed determinism, public-API
   discipline) and the intentional-choice list, and defers to `AGENTS.md`.
 
+### Changed
+
+- Repository merge policy in `.github/settings.yml`: merge commits are the
+  preferred merge method. Squash merging is disabled and `required_linear_history`
+  is off so merge commits are allowed on `main`.
+
 ## [0.1.4] - 2026-06-17
 
 ### Removed
