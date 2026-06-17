@@ -3,9 +3,12 @@
 from zensical_updates.urls import (
     absolute_url,
     archive_url,
+    category_index_url,
     category_url,
+    index_url,
     post_url,
     slugify,
+    tag_index_url,
     tag_url,
     year_url,
 )
@@ -43,3 +46,13 @@ def test_absolute_url_takes_only_scheme_and_host_from_site_url() -> None:
     assert (
         absolute_url("https://example.com/anything/", "/updates/") == "https://example.com/updates/"
     )
+
+
+def test_index_url_is_the_section_root() -> None:
+    assert index_url("updates") == "/updates/"
+    assert index_url("repo/updates") == "/repo/updates/"
+
+
+def test_tag_and_category_index_urls() -> None:
+    assert tag_index_url("updates") == "/updates/tags/"
+    assert category_index_url("repo/updates") == "/repo/updates/categories/"
