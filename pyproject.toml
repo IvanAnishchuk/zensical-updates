@@ -22,6 +22,9 @@ dependencies = [
     "typer>=0.15",
     "rich>=13.0",
     "pyyaml>=6.0.3",
+    "zensical>=0.0.45,<0.1.0",
+    "feedgen>=1.0,<2.0",
+    "lxml>=5.0",
 ]
 
 [project.urls]
@@ -48,6 +51,7 @@ dev = [
     "zizmor>=1.0",
     "types-pyyaml>=6.0.12.20260518",
     "zensical>=0.0.45",
+    "feedparser>=6.0",
 ]
 docs = [
     "zensical>=0.0.40",
@@ -172,3 +176,7 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "pragma: no cover",
 ]
+
+[[tool.mypy.overrides]]
+module = ["feedgen.*", "lxml.*", "zensical.*", "feedparser"]
+ignore_missing_imports = true

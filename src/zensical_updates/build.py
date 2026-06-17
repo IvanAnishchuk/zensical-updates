@@ -12,6 +12,7 @@ import shutil
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from zensical_updates.feed import build_feed, make_renderer
 from zensical_updates.frontmatter import split_front_matter
 from zensical_updates.model import (
     discover_posts,
@@ -43,6 +44,7 @@ class BuildResult:
     out_dir: Path
     written: list[Path] = field(default_factory=list)
     post_urls: list[str] = field(default_factory=list)
+    feed_path: Path | None = None
 
 
 def clean_site(config: Config, root: Path) -> None:
@@ -94,6 +96,15 @@ def build_site(config: Config, root: Path) -> BuildResult:
         for cat, cat_posts in cats.items():
             page = render_category(cat, cat_posts, base)
             _write(out_dir / "categories" / slugify(cat) / "index.md", page, result)
+
+    if config.emit_feed and config.site_url:
+        render = make_renderer(root, config)
+        feed_posts = posts if config.feed_limit <= 0 else posts[: config.feed_limit]
+        feed_xml = build_feed(config, feed_posts, render)
+        feed_file = out_dir / "feed.xml"
+        feed_file.write_text(feed_xml, encoding="utf-8")
+        result.written.append(feed_file)
+        result.feed_path = feed_file
 
     return result
 

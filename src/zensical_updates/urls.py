@@ -9,6 +9,7 @@ site-absolute, which zensical does not validate, so they must be exactly right.
 from __future__ import annotations
 
 import re
+from urllib.parse import urlparse
 
 _NON_SLUG = re.compile(r"[^a-z0-9]+")
 
@@ -36,3 +37,14 @@ def archive_url(base: str) -> str:
 
 def year_url(base: str, year: int) -> str:
     return f"/{base}/archive/{year}/"
+
+
+def absolute_url(site_url: str, path: str) -> str:
+    """Join the scheme and host of ``site_url`` to a site-absolute ``path``.
+
+    Feed links are consumed off-site, so they must be fully qualified. ``path`` is
+    a site-absolute path (leading ``/``); only the scheme and host come from
+    ``site_url``.
+    """
+    parts = urlparse(site_url)
+    return f"{parts.scheme}://{parts.netloc}{path}"

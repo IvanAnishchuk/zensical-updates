@@ -61,6 +61,23 @@ emit_archive = true
 
 Every key is optional. The defaults above apply when the table is absent.
 
+## Feed
+
+With `site_url` set in `zensical.toml`, the build writes an RSS 2.0 feed to
+`docs/<base>/feed.xml`, served at `<site_url>/<base>/feed.xml` (for the default
+section, `/updates/feed.xml`). Each item carries the full post HTML, rendered by
+zensical so it matches the site, with every link rewritten to a fully-qualified
+URL for readers off-site. Without `site_url` the build prints a warning and skips
+the feed, since an off-site feed needs absolute links.
+
+Two config keys tune it:
+
+```toml
+[project.extra.zensical_updates]
+emit_feed = true   # generate feed.xml (default)
+feed_limit = 0     # max items, 0 means no cap (default)
+```
+
 ## CLI
 
 ```bash

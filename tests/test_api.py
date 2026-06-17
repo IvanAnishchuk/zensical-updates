@@ -17,3 +17,10 @@ def test_public_api_is_importable() -> None:
 
 def test_key_symbols_are_exported() -> None:
     assert {"build_site", "clean_site", "Config", "Post"} <= set(lib.__all__)
+
+
+def test_build_feed_and_feederror_are_public() -> None:
+    assert "build_feed" in lib.__all__
+    assert "FeedError" in lib.__all__
+    assert hasattr(lib, "build_feed")
+    assert hasattr(lib, "FeedError")

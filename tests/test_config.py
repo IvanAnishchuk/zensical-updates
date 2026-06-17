@@ -48,3 +48,31 @@ def test_url_base_is_just_base_for_a_root_served_site() -> None:
     # prefix and must not introduce an extra slash.
     assert Config(base="updates", site_url="https://example.com/").url_base == "updates"
     assert Config(base="updates", site_url="https://example.com").url_base == "updates"
+
+
+def test_load_config_reads_feed_and_site_metadata(tmp_path: Path) -> None:
+    (tmp_path / "zensical.toml").write_text(
+        "[project]\n"
+        'site_name = "My Site"\n'
+        'site_description = "All the news"\n'
+        'language = "fr"\n'
+        "[project.extra.zensical_updates]\n"
+        "emit_feed = false\n"
+        "feed_limit = 10\n",
+        encoding="utf-8",
+    )
+    cfg = load_config(tmp_path / "zensical.toml")
+    assert cfg.site_name == "My Site"
+    assert cfg.site_description == "All the news"
+    assert cfg.language == "fr"
+    assert cfg.emit_feed is False
+    expected_feed_limit = 10
+    assert cfg.feed_limit == expected_feed_limit
+
+
+def test_feed_config_defaults() -> None:
+    cfg = Config()
+    assert cfg.emit_feed is True
+    assert cfg.feed_limit == 0
+    assert cfg.language == "en"
+    assert cfg.site_name == ""

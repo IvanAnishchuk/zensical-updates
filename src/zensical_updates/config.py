@@ -29,6 +29,11 @@ class Config:
     emit_categories: bool = True
     emit_archive: bool = True
     site_url: str = ""
+    site_name: str = ""
+    site_description: str = ""
+    language: str = "en"
+    emit_feed: bool = True
+    feed_limit: int = 0
 
     @property
     def url_base(self) -> str:
@@ -70,4 +75,9 @@ def load_config(path: Path) -> Config:
         emit_categories=bool(table.get("emit_categories", d.emit_categories)),
         emit_archive=bool(table.get("emit_archive", d.emit_archive)),
         site_url=str(project.get("site_url", d.site_url)),
+        site_name=str(project.get("site_name", d.site_name)),
+        site_description=str(project.get("site_description", d.site_description)),
+        language=str(project.get("language", d.language)),
+        emit_feed=bool(table.get("emit_feed", d.emit_feed)),
+        feed_limit=int(table.get("feed_limit", d.feed_limit)),
     )
