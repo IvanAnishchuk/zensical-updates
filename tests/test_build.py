@@ -42,6 +42,37 @@ def test_build_copies_posts_and_writes_pages(tmp_path: Path) -> None:
     assert "/updates/hello/" in result.post_urls
 
 
+def test_build_links_carry_the_site_subpath(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", categories=("weekly-update",), tags=("epf",))
+
+    cfg = Config(site_url="https://example.github.io/repo/")
+    result = build_site(cfg, tmp_path)
+    out = tmp_path / "docs" / "updates"
+
+    index = (out / "index.md").read_text(encoding="utf-8")
+    assert "[hello](/repo/updates/hello/)" in index  # post link carries the base path
+    assert "/repo/updates/tags/epf/" in index  # taxonomy link too
+    assert "/repo/updates/hello/" in result.post_urls
+    assert (out / "hello.md").exists()  # on-disk output dir is unchanged by the base path
+
+
+def test_build_links_have_no_double_slash_when_root_served(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", tags=("epf",))
+
+    # No site_url (root-served site): links stay /updates/... with no extra slash.
+    result = build_site(Config(), tmp_path)
+    index = (tmp_path / "docs" / "updates" / "index.md").read_text(encoding="utf-8")
+    assert "[hello](/updates/hello/)" in index
+    assert "//" not in index
+    assert result.post_urls == ["/updates/hello/"]
+
+
 def test_build_does_not_mutate_the_source(tmp_path: Path) -> None:
     src = tmp_path / "updates"
     src.mkdir()

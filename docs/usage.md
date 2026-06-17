@@ -44,6 +44,22 @@ emit_categories = true
 emit_archive = true
 ```
 
+## Project Pages and the base path
+
+A site served under a sub-path needs that sub-path in every link. GitHub project
+Pages serve at `https://<user>.github.io/<repo>/`, so a link to `/updates/foo/`
+404s; it has to be `/<repo>/updates/foo/`. The generator reads `[project]
+site_url` and prepends its path to every emitted link.
+
+```toml
+[project]
+site_url = "https://ivananishchuk.github.io/eth-protocol-fellowship/"
+```
+
+With that set, a post link becomes `/eth-protocol-fellowship/updates/foo/`. The
+files on disk still live at `docs/<base>/`; only the URLs gain the prefix. A
+root-served site (no `site_url`, or one with no path) gets plain `/updates/foo/`.
+
 ## Build
 
 ```bash

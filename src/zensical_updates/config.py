@@ -2,6 +2,8 @@
 
 zensical ignores the ``[project.extra]`` namespace, so it is a safe home for our
 settings. tomllib reads the table; absent keys fall back to the defaults below.
+The site's own ``[project] site_url`` is read too, so emitted links can carry the
+sub-path a project Pages deploy is served under.
 """
 
 from __future__ import annotations
@@ -9,6 +11,7 @@ from __future__ import annotations
 import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
+from urllib.parse import urlparse
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -25,19 +28,38 @@ class Config:
     emit_tags: bool = True
     emit_categories: bool = True
     emit_archive: bool = True
+    site_url: str = ""
+
+    @property
+    def url_base(self) -> str:
+        """The URL base for emitted links: the site sub-path joined to ``base``.
+
+        A project Pages site is served under ``site_url``'s path (e.g.
+        ``/eth-protocol-fellowship/``); a link that omits it 404s. A root-served
+        site has no path, so the base is just ``base`` with no extra slash. The
+        on-disk output dir is built from ``base`` alone, so it is unaffected.
+        """
+        prefix = urlparse(self.site_url).path.rstrip("/")
+        return f"{prefix}/{self.base}".strip("/")
 
 
-def _table(path: Path) -> dict[str, Any]:
+def _project(path: Path) -> dict[str, Any]:
     data = tomllib.loads(path.read_text(encoding="utf-8"))
-    node: Any = data
-    for key in ("project", "extra", "zensical_updates"):
+    project = data.get("project") if isinstance(data, dict) else None
+    return project if isinstance(project, dict) else {}
+
+
+def _table(project: dict[str, Any]) -> dict[str, Any]:
+    node: Any = project
+    for key in ("extra", "zensical_updates"):
         node = node.get(key, {}) if isinstance(node, dict) else {}
     return node if isinstance(node, dict) else {}
 
 
 def load_config(path: Path) -> Config:
     """Read the config table from ``zensical.toml``, defaulting any absent key."""
-    table = _table(path)
+    project = _project(path)
+    table = _table(project)
     d = Config()
     return Config(
         base=str(table.get("base", d.base)),
@@ -47,4 +69,5 @@ def load_config(path: Path) -> Config:
         emit_tags=bool(table.get("emit_tags", d.emit_tags)),
         emit_categories=bool(table.get("emit_categories", d.emit_categories)),
         emit_archive=bool(table.get("emit_archive", d.emit_archive)),
+        site_url=str(project.get("site_url", d.site_url)),
     )

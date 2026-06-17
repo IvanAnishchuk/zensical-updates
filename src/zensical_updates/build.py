@@ -60,7 +60,9 @@ def build_site(config: Config, root: Path) -> BuildResult:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     posts = discover_posts(source_dir, index_name=config.intro)
-    base = config.base
+    # Links carry the site sub-path (config.url_base); the output dir above uses
+    # config.base, so a project Pages deploy is served correctly without moving files.
+    base = config.url_base
     result = BuildResult(out_dir=out_dir)
 
     # Copy each post verbatim so it renders at /<base>/<slug>/.
