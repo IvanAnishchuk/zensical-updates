@@ -124,6 +124,16 @@ def test_build_feed_without_excerpt_keeps_full_html_in_description() -> None:
     assert not entry.get("content")
 
 
+def test_build_feed_treats_whitespace_only_excerpt_as_no_summary() -> None:
+    # A whitespace-only excerpt is not a real summary, so it falls through to the
+    # full-HTML-in-description fallback with no empty <content:encoded>.
+    post = _post("b", "2026-06-11", title="B", excerpt="   ")
+    parsed = cast("Any", feedparser.parse(build_feed(_cfg(), [post], _stub_render)))
+    entry = parsed.entries[0]
+    assert "<p>Body of b.</p>" in entry.summary
+    assert not entry.get("content")
+
+
 def test_build_feed_handles_cdata_terminator_in_content() -> None:
     # A post whose rendered HTML contains the CDATA terminator "]]>" must not
     # break the feed: lxml splits the CDATA section so the XML stays well-formed.
