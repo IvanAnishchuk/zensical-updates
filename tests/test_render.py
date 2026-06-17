@@ -114,6 +114,11 @@ def test_browse_drops_disabled_indexes() -> None:
     assert "[Archive]" not in nav
 
 
-def test_browse_is_empty_when_no_other_target() -> None:
+def test_browse_returns_only_updates_when_others_disabled() -> None:
     nav = render_browse("updates", current="tags", categories=False, archive=False)
     assert nav == "[Updates](/updates/)"
+
+
+def test_browse_is_empty_on_index_with_all_others_disabled() -> None:
+    nav = render_browse("updates", current="index", tags=False, categories=False, archive=False)
+    assert nav == ""

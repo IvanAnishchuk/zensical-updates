@@ -23,6 +23,7 @@ from zensical_updates.urls import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping
+    from typing import Literal
 
     from zensical_updates.model import Post
 
@@ -32,7 +33,7 @@ _EMPTY = "_No updates yet._"
 def render_browse(
     base: str,
     *,
-    current: str,
+    current: Literal["index", "tags", "categories", "archive"],
     tags: bool = True,
     categories: bool = True,
     archive: bool = True,
@@ -41,7 +42,8 @@ def render_browse(
 
     ``current`` (one of ``"index"``, ``"tags"``, ``"categories"``, ``"archive"``)
     names the page being rendered, so it is never linked to itself. The Updates
-    index is always a target. Returns ``""`` when nothing remains to link.
+    index is always a target. Returns ``""`` only when ``current`` is ``"index"``
+    and the other sections are all disabled.
     """
     targets = [
         ("Updates", index_url(base), "index", True),
