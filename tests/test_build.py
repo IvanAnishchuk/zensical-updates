@@ -1,7 +1,7 @@
 """Tests for the build orchestration."""
 
 from dataclasses import replace
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import feedparser
 import pytest
@@ -9,6 +9,9 @@ import pytest
 from zensical_updates import load_config
 from zensical_updates.build import build_site, clean_site
 from zensical_updates.config import Config
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _write_post(

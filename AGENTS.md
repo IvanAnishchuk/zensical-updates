@@ -3,7 +3,7 @@
 zensical-updates — Generate a dated Updates (blog) section for zensical sites as plain Markdown
 
 Importable **Python library** (src layout under `src/zensical_updates/`),
-Python 3.11+, shipping a `py.typed` marker. A thin
+Python 3.14+, shipping a `py.typed` marker. A thin
 **typer + rich** maintenance CLI rides along for introspection. Guidance for AI
 coding agents working in this repo; humans get the same rules via `CLAUDE.md` and
 `.github/copilot-instructions.md`.
