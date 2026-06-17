@@ -11,6 +11,7 @@ from importlib.metadata import version
 
 from zensical_updates.build import BuildResult, build_site, clean_site
 from zensical_updates.config import Config, load_config
+from zensical_updates.feed import FeedError, build_feed
 from zensical_updates.model import Post, PostError, discover_posts, load_post
 
 __version__ = version("zensical-updates")
@@ -18,8 +19,10 @@ __version__ = version("zensical-updates")
 __all__ = [
     "BuildResult",
     "Config",
+    "FeedError",
     "Post",
     "PostError",
+    "build_feed",
     "build_site",
     "clean_site",
     "discover_posts",
