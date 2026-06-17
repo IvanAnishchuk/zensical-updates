@@ -8,14 +8,17 @@
 # neutral, or empty CodeRabbit check is NOT an approval. See CLAUDE.md / AGENTS.md.
 #
 # This file pins behavior so it is explicit and version-controlled instead of
-# relying on dashboard defaults. NOTE: this is a public CC0 repo on CodeRabbit's
-# free-for-OSS tier, which enforces a per-developer hourly PR-review RATE LIMIT.
-# When CodeRabbit posts a "review limit reached / run out of usage credits" stub,
-# that is the rate limit, not a billing problem — the "purchase credits" line is
-# boilerplate that does not apply here. Wait out the window (it states the
-# minutes) and re-trigger with `@coderabbitai review`, or push a new commit.
-# `auto_incremental_review` is off below to keep each push from spending the
-# hourly budget.
+# relying on dashboard defaults.
+#
+# NOTE on the "review limit reached / out of usage credits" stub: this is a
+# public CC0 repo on CodeRabbit's free-for-OSS tier, which enforces a
+# per-developer hourly PR-review rate limit. That stub is the rate limit. It is
+# not a billing situation, and the "purchase credits in the billing tab" line in
+# it is generic boilerplate that does not apply to a public OSS repo. The stub
+# states when reviews refill (e.g. "17 minutes"); wait out that window and
+# re-trigger with an `@coderabbitai review` comment, or push a new commit. No
+# YAML setting unblocks it. `auto_incremental_review` is off below so each push
+# does not spend the hourly budget.
 
 language: en-US
 early_access: false
@@ -42,7 +45,7 @@ reviews:
     base_branches:
       - main
 
-  # Exclusions only — everything not listed is still reviewed. These are
+  # Exclusions only. Everything not listed is still reviewed. These are
   # generated or lock files; the real source is reviewed normally.
   path_filters:
     - "!uv.lock"
@@ -55,24 +58,24 @@ reviews:
   path_instructions:
     - path: "src/zensical_updates/**/*.py"
       instructions: >-
-        House style (deliberate — do NOT flag these as issues): every module
+        House style (deliberate, do NOT flag these as issues): every module
         opens with `from __future__ import annotations`; type-only imports live
         under `if TYPE_CHECKING:` because the flake8-type-checking (TCH) ruff
-        rules are ON — that guarding is required, not dead code. Imports go at
+        rules are ON, so that guarding is required and is not dead code. Imports go at
         the top of the file (PLC0415 is honored); the one deliberate
         function-scoped import is `from feedgen.feed import FeedGenerator` in
         feed.py. The feed reuses zensical's INTERNAL render API behind a
         `FeedError` guard, so the broad `except Exception` in feed.py that wraps
         and re-raises (`raise FeedError(...) from exc`) is intentional, not a
         blind-except smell. The feed is DETERMINISTIC: every date is set
-        explicitly from post dates and no wall-clock value may leak in — flag any
+        explicitly from post dates and no wall-clock value may leak in. Flag any
         new `datetime.now()` / `date.today()` reaching feed or page output. v1
         carries the full post HTML in the RSS `<description>` as CDATA; the
         `content:encoded` summary/full split is a tracked follow-up (board item
         "[zu] Feed content:encoded"), so do not re-flag full-HTML-in-description
         as a bug. Generated site-absolute URLs (urls.py) MUST carry the site base
         path; zensical does not validate them, and a missing base path 404s on
-        project Pages (regression fixed in 0.1.2) — scrutinize URL construction.
+        project Pages (regression fixed in 0.1.2). Scrutinize URL construction.
         The supported zensical range is `>=0.0.45,<0.1.0`. Coverage floor is 80%
         (actual ~99%); keep branch coverage by structuring testable code, not by
         adding `pragma: no cover`.
@@ -80,7 +83,7 @@ reviews:
       instructions: >-
         The version string lives in BOTH this file and `pyproject.toml`; a bump
         in one without the other is a bug. The public API is exactly the names in
-        `__all__` — treat `__all__` changes as API changes (semver + CHANGELOG).
+        `__all__`; treat `__all__` changes as API changes (semver + CHANGELOG).
     - path: "tests/**/*.py"
       instructions: >-
         The decisive test runs `zensical build --strict` over a fixture site and
@@ -91,7 +94,7 @@ reviews:
       instructions: >-
         Keep a Changelog format. New entries go under `## [Unreleased]` in the
         matching category (Added / Changed / Fixed / Security). Do not insert a
-        category heading into the middle of an existing list — that silently
+        category heading into the middle of an existing list, which silently
         relabels the entries above it.
 
   # ruff and gitleaks are already enforced strictly by CI and pre-commit. Disable

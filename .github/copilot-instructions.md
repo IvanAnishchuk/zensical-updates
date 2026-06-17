@@ -10,7 +10,7 @@ sites as plain Markdown plus an RSS feed, running as a CLI pre-build step
 (`zensical-updates build` before `zensical build`).
 
 **All conventions, tooling, security, workflow, and project invariants live in
-[`AGENTS.md`](../AGENTS.md)** -- the single source of truth for this repo. Read it
+[`AGENTS.md`](../AGENTS.md)**, the single source of truth for this repo. Read it
 before reviewing or generating code. This file adds the review focus and the
 review-process rules below.
 
@@ -28,13 +28,13 @@ review-process rules below.
   reaching feed or page output.
 - **Public API discipline.** The supported surface is exactly `__all__` in
   `__init__.py`; treat changes to it as API changes (semver + CHANGELOG). The
-  version lives in both `pyproject.toml` and `__init__.py` -- a bump to one
+  version lives in both `pyproject.toml` and `__init__.py`; a bump to one
   without the other is a bug.
 
 ## Quality bar (do not weaken in suggestions)
 
 - `ruff`, `mypy --strict`, `ty`, and `basedpyright` must all pass with **zero
-  errors and zero warnings** -- never suggest a blanket `# type: ignore`,
+  errors and zero warnings**. Never suggest a blanket `# type: ignore`,
   `# noqa`, or `|| true` to silence a real issue.
 - `pytest` runs with branch coverage; the floor is **80%** (actual ~99%). Hold
   coverage by structuring testable code, not by adding `pragma: no cover`.
@@ -42,7 +42,7 @@ review-process rules below.
   asserts every generated link resolves. Flag changes that weaken
   link-resolution or determinism checks.
 
-## Intentional choices -- do not flag as bugs
+## Intentional choices (do not flag as bugs)
 
 - Every module opens with `from __future__ import annotations`; type-only
   imports sit under `if TYPE_CHECKING:` because the flake8-type-checking (TCH)
@@ -61,7 +61,7 @@ ruff and the formatter already cover.
 **When asked to "review", only review.** Do not create commits, push
 changes, or apply fixes. The goal of a review is to provide feedback,
 not to modify the code. If you find issues, report them as review
-comments -- never fix them on behalf of the author.
+comments, never fix them on behalf of the author.
 
 When reviewing PRs:
 - Triage every comment, including low-confidence hidden ones

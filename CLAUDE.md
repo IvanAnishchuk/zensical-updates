@@ -55,7 +55,8 @@ approval. The real gate is strict CI plus a human review.
 - **CodeRabbit** (`.coderabbit.yaml`): auto-reviews each PR on open. This is a
   free-for-OSS repo, so CodeRabbit enforces a per-developer hourly review rate
   limit. A "review limit reached / out of usage credits" stub is that rate
-  limit, not a billing problem. Wait out the stated window, then re-trigger with
+  limit. The "purchase credits" line in it is generic boilerplate; a public OSS
+  repo has no billing to top up. Wait out the stated window, then re-trigger with
   a `@coderabbitai review` comment. Incremental auto-review is off, so each push
   does not spend the budget.
 - **Gemini Code Assist** (`.gemini/config.yaml`, `.gemini/styleguide.md`):

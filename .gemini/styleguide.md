@@ -40,7 +40,7 @@ what to weigh in a review and what is deliberate.
   asserts every generated link resolves. Changes that weaken link-resolution or
   determinism checks deserve a flag, not a relaxed expectation.
 
-## Intentional choices — do not flag these as bugs
+## Intentional choices (do not flag these as bugs)
 
 - Every module opens with `from __future__ import annotations`. Type-only
   imports sit under `if TYPE_CHECKING:` because the flake8-type-checking (TCH)

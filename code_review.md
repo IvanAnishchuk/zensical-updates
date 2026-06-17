@@ -41,7 +41,7 @@ issue. Do not commit, push, or apply fixes on the author's behalf.
 - `pytest` runs with branch coverage; the floor is 80% (actual ~99%). Hold
   coverage by structuring testable code, not by adding `pragma: no cover`.
 
-## Intentional choices — do not flag these as bugs
+## Intentional choices (do not flag these as bugs)
 
 - Every module opens with `from __future__ import annotations`. Type-only
   imports sit under `if TYPE_CHECKING:` because the flake8-type-checking (TCH)
