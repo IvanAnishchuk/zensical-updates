@@ -10,7 +10,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from zensical_updates.model import group_by_year
-from zensical_updates.urls import category_url, post_url, tag_url, year_url
+from zensical_updates.urls import (
+    archive_url,
+    category_index_url,
+    category_url,
+    index_url,
+    post_url,
+    tag_index_url,
+    tag_url,
+    year_url,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping
@@ -18,6 +27,32 @@ if TYPE_CHECKING:
     from zensical_updates.model import Post
 
 _EMPTY = "_No updates yet._"
+
+
+def render_browse(
+    base: str,
+    *,
+    current: str,
+    tags: bool = True,
+    categories: bool = True,
+    archive: bool = True,
+) -> str:
+    """Build the inline nav line linking the enabled index pages.
+
+    ``current`` (one of ``"index"``, ``"tags"``, ``"categories"``, ``"archive"``)
+    names the page being rendered, so it is never linked to itself. The Updates
+    index is always a target. Returns ``""`` when nothing remains to link.
+    """
+    targets = [
+        ("Updates", index_url(base), "index", True),
+        ("Tags", tag_index_url(base), "tags", tags),
+        ("Categories", category_index_url(base), "categories", categories),
+        ("Archive", archive_url(base), "archive", archive),
+    ]
+    links = [
+        f"[{label}]({url})" for label, url, key, enabled in targets if enabled and key != current
+    ]
+    return " · ".join(links)
 
 
 def _term_links(terms: Iterable[str], url: Callable[[str], str]) -> str:

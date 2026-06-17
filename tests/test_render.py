@@ -7,6 +7,7 @@ from pathlib import Path
 from zensical_updates.model import Post, group_by_category, group_by_tag
 from zensical_updates.render import (
     render_archive_index,
+    render_browse,
     render_category,
     render_category_index,
     render_index,
@@ -95,3 +96,24 @@ def test_empty_listing_has_a_placeholder() -> None:
     md = render_index([], "updates")
     assert "No updates yet" in md
     _assert_brackets_are_links(md)
+
+
+def test_browse_links_enabled_indexes_and_omits_current() -> None:
+    nav = render_browse("updates", current="tags", categories=True, archive=True)
+    assert "[Updates](/updates/)" in nav
+    assert "[Categories](/updates/categories/)" in nav
+    assert "[Archive](/updates/archive/)" in nav
+    assert "[Tags]" not in nav
+    _assert_brackets_are_links(nav)
+
+
+def test_browse_drops_disabled_indexes() -> None:
+    nav = render_browse("updates", current="index", tags=True, categories=False, archive=False)
+    assert "[Tags](/updates/tags/)" in nav
+    assert "[Categories]" not in nav
+    assert "[Archive]" not in nav
+
+
+def test_browse_is_empty_when_no_other_target() -> None:
+    nav = render_browse("updates", current="tags", categories=False, archive=False)
+    assert nav == "[Updates](/updates/)"
