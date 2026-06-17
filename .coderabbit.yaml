@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit review configuration for zensical-updates.
+#
+# Policy: CodeRabbit is a BEST-EFFORT second opinion. The real review gate is
+# `/code-review` plus strict CI (ruff, three type checkers, the coverage floor,
+# the zensical `--strict` integration build) and a human approval. A green,
+# neutral, or empty CodeRabbit check is NOT an approval. See CLAUDE.md / AGENTS.md.
+#
+# This file pins behavior so it is explicit and version-controlled instead of
+# relying on dashboard defaults.
+#
+# NOTE on the "review limit reached / out of usage credits" stub: this is a
+# public CC0 repo on CodeRabbit's free-for-OSS tier, which enforces a
+# per-developer hourly PR-review rate limit. That stub is the rate limit. It is
+# not a billing situation, and the "purchase credits in the billing tab" line in
+# it is generic boilerplate that does not apply to a public OSS repo. The stub
+# states when reviews refill (e.g. "17 minutes"); wait out that window and
+# re-trigger with an `@coderabbitai review` comment, or push a new commit. No
+# YAML setting unblocks it. `auto_incremental_review` is off below so each push
+# does not spend the hourly budget.
+
+language: en-US
+early_access: false
+
+reviews:
+  # assertive = more thorough, surfaces more (incl. nitpicks). Chosen because
+  # CodeRabbit only runs best-effort here, so maximize signal when it does run.
+  profile: assertive
+
+  # Best-effort reviewer: never let it block a merge via "request changes".
+  request_changes_workflow: false
+
+  high_level_summary: true
+  review_status: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    # One review per PR, not one per push. The free-OSS rate limit is
+    # per-developer-per-hour; incremental re-reviews burned it on #9. Re-run a
+    # fresh pass manually with `@coderabbitai review` when a PR is ready.
+    auto_incremental_review: false
+    base_branches:
+      - main
+
+  # Exclusions only. Everything not listed is still reviewed. These are
+  # generated or lock files; the real source is reviewed normally.
+  path_filters:
+    - "!uv.lock"
+    - "!requirements.txt"      # `uv export` output, regenerated, not hand-edited
+    - "!requirements-dev.txt"  # `uv export` output, regenerated, not hand-edited
+    - "!dist/**"
+    - "!site/**"               # built static site
+    - "!.reports/**"
+
+  path_instructions:
+    - path: "src/zensical_updates/**/*.py"
+      instructions: >-
+        House style (deliberate, do NOT flag these as issues): every module
+        opens with `from __future__ import annotations`; type-only imports live
+        under `if TYPE_CHECKING:` because the flake8-type-checking (TCH) ruff
+        rules are ON, so that guarding is required and is not dead code. Imports go at
+        the top of the file (PLC0415 is honored); the one deliberate
+        function-scoped import is `from feedgen.feed import FeedGenerator` in
+        feed.py. The feed reuses zensical's INTERNAL render API behind a
+        `FeedError` guard, so the broad `except Exception` in feed.py that wraps
+        and re-raises (`raise FeedError(...) from exc`) is intentional, not a
+        blind-except smell. The feed is DETERMINISTIC: every date is set
+        explicitly from post dates and no wall-clock value may leak in. Flag any
+        new `datetime.now()` / `date.today()` reaching feed or page output. v1
+        carries the full post HTML in the RSS `<description>` as CDATA; the
+        `content:encoded` summary/full split is a tracked follow-up (board item
+        "[zu] Feed content:encoded"), so do not re-flag full-HTML-in-description
+        as a bug. Generated site-absolute URLs (urls.py) MUST carry the site base
+        path; zensical does not validate them, and a missing base path 404s on
+        project Pages (regression fixed in 0.1.2). Scrutinize URL construction.
+        The supported zensical range is `>=0.0.45,<0.1.0`. Coverage floor is 80%
+        (actual ~99%); keep branch coverage by structuring testable code, not by
+        adding `pragma: no cover`.
+    - path: "src/zensical_updates/__init__.py"
+      instructions: >-
+        The version string lives in BOTH this file and `pyproject.toml`; a bump
+        in one without the other is a bug. The public API is exactly the names in
+        `__all__`; treat `__all__` changes as API changes (semver + CHANGELOG).
+    - path: "tests/**/*.py"
+      instructions: >-
+        The decisive test runs `zensical build --strict` over a fixture site and
+        asserts every generated link resolves. Assertions on rendered Markdown or
+        feed XML can be whitespace/structure significant; flag changes that weaken
+        link-resolution or determinism checks rather than fixing the expectation.
+    - path: "CHANGELOG.md"
+      instructions: >-
+        Keep a Changelog format. New entries go under `## [Unreleased]` in the
+        matching category (Added / Changed / Fixed / Security). Do not insert a
+        category heading into the middle of an existing list, which silently
+        relabels the entries above it.
+
+  # ruff and gitleaks are already enforced strictly by CI and pre-commit. Disable
+  # CodeRabbit's duplicates so it focuses on the LLM review CI can't do, without
+  # doubling up inline lint comments.
+  tools:
+    ruff:
+      enabled: false
+    gitleaks:
+      enabled: false
+
+chat:
+  auto_reply: true

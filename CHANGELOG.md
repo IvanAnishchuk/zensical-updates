@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Code-review bot configuration so automated reviewers honor the project's house
+  style and skip generated files: `.coderabbit.yaml` (CodeRabbit), `.gemini/`
+  (Gemini Code Assist), `code_review.md` with an `AGENTS.md` pointer (Codex), and
+  an expanded `.github/copilot-instructions.md` (Copilot). Each encodes the same
+  review focus (URL base-path correctness, feed determinism, public-API
+  discipline) and the intentional-choice list, and defers to `AGENTS.md`.
+
+### Changed
+
+- Repository merge policy in `.github/settings.yml`: merge commits are the
+  preferred merge method. Squash merging is disabled and `required_linear_history`
+  is off so merge commits are allowed on `main`.
+
 ## [0.1.4] - 2026-06-17
 
 ### Removed

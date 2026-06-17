@@ -46,6 +46,32 @@ the generated section once v1 ships. Keep the URL/layout contract in lockstep wi
 that repo's `CLAUDE.md` (the `docs/updates/<slug>.md` -> `/updates/<slug>/` rule
 and the block-list front-matter rule both live there too).
 
+## Code review bots
+
+Automated PR review runs through four reviewers, configured in-repo so they
+review against this project's house style. A green or empty bot check is not an
+approval. The real gate is strict CI plus a human review.
+
+- **CodeRabbit** (`.coderabbit.yaml`): auto-reviews each PR on open. This is a
+  free-for-OSS repo, so CodeRabbit enforces a per-developer hourly review rate
+  limit. A "review limit reached / out of usage credits" stub is that rate
+  limit. The "purchase credits" line in it is generic boilerplate; a public OSS
+  repo has no billing to top up. Wait out the stated window, then re-trigger with
+  a `@coderabbitai review` comment. Incremental auto-review is off, so each push
+  does not spend the budget.
+- **Gemini Code Assist** (`.gemini/config.yaml`, `.gemini/styleguide.md`):
+  auto-reviews on open. It sometimes errors on the first pass; retry with a
+  `/gemini review` comment.
+- **Codex** (`code_review.md`, referenced from `AGENTS.md`): reads its review
+  guidelines from `AGENTS.md`. Config is in place; not wired for testing yet.
+- **Copilot** (`.github/copilot-instructions.md`): code review needs enabling in
+  repo settings, then a request via `gh pr edit <PR> --add-reviewer @copilot`.
+  Deferred until next month.
+
+Bot findings span three endpoints: issue comments (summaries),
+`pulls/<N>/comments` (inline findings), and `pulls/<N>/reviews` (verdicts).
+Filter on the full `...[bot]` login (e.g. `coderabbitai[bot]`).
+
 ## Writing style
 
 Binds on docs, comments, commit messages, PR text. Mirrors Ivan's conventions.

@@ -45,6 +45,22 @@ uv run zensical-updates info          # maintenance CLI
 - **Releases publish to PyPI** (`release.yml`): bump the version, update the
   changelog, tag `vX.Y.Z`. Pre-release tags route to TestPyPI.
 
+## Review guidelines
+
+Automated reviewers (Codex, Copilot, CodeRabbit, Gemini) apply these on PRs. The
+shared review focus, quality bar, and intentional-choice list live in
+[`code_review.md`](code_review.md). The essentials:
+
+- Scrutinize **URL base-path correctness** (`urls.py` paths are unvalidated and
+  404 on project Pages if the site base path is missing) and **feed determinism**
+  (no `datetime.now()` / `date.today()` may leak into feed or page output).
+- Do NOT flag these as bugs: the per-module `from __future__ import annotations`
+  and `if TYPE_CHECKING:` guards (the TCH ruff rules are on), the function-scoped
+  `from feedgen.feed import FeedGenerator` in `feed.py`, the broad
+  `except Exception` wrapped and re-raised as `FeedError`, or the full post HTML
+  carried in the RSS `<description>` as CDATA (the `content:encoded` split is a
+  tracked follow-up).
+
 <!-- universal:begin -->
 <!--
   Universal conventions — shared verbatim across all python-project-templates.
