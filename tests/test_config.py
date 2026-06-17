@@ -22,3 +22,29 @@ def test_load_config_defaults_when_table_absent(tmp_path: Path) -> None:
     assert cfg == Config()
     assert cfg.base == "updates"
     assert cfg.source == "updates"
+
+
+def test_load_config_reads_the_project_site_url(tmp_path: Path) -> None:
+    (tmp_path / "zensical.toml").write_text(
+        '[project]\nsite_url = "https://example.github.io/repo/"\n'
+        '[project.extra.zensical_updates]\nbase = "updates"\n',
+        encoding="utf-8",
+    )
+    cfg = load_config(tmp_path / "zensical.toml")
+    assert cfg.site_url == "https://example.github.io/repo/"
+
+
+def test_url_base_carries_the_site_subpath() -> None:
+    cfg = Config(base="updates", site_url="https://example.github.io/repo/")
+    assert cfg.url_base == "repo/updates"
+
+
+def test_url_base_is_just_base_without_a_site_url() -> None:
+    assert Config(base="updates").url_base == "updates"
+
+
+def test_url_base_is_just_base_for_a_root_served_site() -> None:
+    # A site_url with no path component (served at the domain root) adds no
+    # prefix and must not introduce an extra slash.
+    assert Config(base="updates", site_url="https://example.com/").url_base == "updates"
+    assert Config(base="updates", site_url="https://example.com").url_base == "updates"
