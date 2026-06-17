@@ -14,7 +14,7 @@ from zensical_updates.feed import FeedError, absolutize_html, build_feed, make_r
 from zensical_updates.model import Post
 
 
-def _post(slug: str, date: str, *, title: str = "", body: str = "") -> Post:
+def _post(slug: str, date: str, *, title: str = "", body: str = "", excerpt: str = "") -> Post:
     return Post(
         slug=slug,
         title=title or slug,
@@ -22,7 +22,7 @@ def _post(slug: str, date: str, *, title: str = "", body: str = "") -> Post:
         categories=(),
         tags=(),
         body=body,
-        excerpt="",
+        excerpt=excerpt,
         source_path=Path(f"{slug}.md"),
     )
 
@@ -102,6 +102,49 @@ def test_build_feed_zero_posts_is_valid() -> None:
     parsed = cast("Any", feedparser.parse(build_feed(_cfg(), [], _stub_render)))
     assert not parsed.bozo
     assert parsed.entries == []
+
+
+def test_build_feed_splits_excerpt_summary_from_full_content() -> None:
+    post = _post("b", "2026-06-11", title="B", excerpt="Short summary here.")
+    parsed = cast("Any", feedparser.parse(build_feed(_cfg(), [post], _stub_render)))
+    entry = parsed.entries[0]
+    # <description> carries the short excerpt, not the full body.
+    assert entry.summary == "Short summary here."
+    # <content:encoded> carries the full rendered HTML.
+    assert entry.content[0].value == "<p>Body of b.</p>"
+
+
+def test_build_feed_without_excerpt_keeps_full_html_in_description() -> None:
+    # No excerpt: there is no separate summary, so the full HTML stays in
+    # <description> and no empty <content:encoded> is emitted.
+    post = _post("b", "2026-06-11", title="B")
+    parsed = cast("Any", feedparser.parse(build_feed(_cfg(), [post], _stub_render)))
+    entry = parsed.entries[0]
+    assert "<p>Body of b.</p>" in entry.summary
+    assert not entry.get("content")
+
+
+def test_build_feed_treats_whitespace_only_excerpt_as_no_summary() -> None:
+    # A whitespace-only excerpt is not a real summary, so it falls through to the
+    # full-HTML-in-description fallback with no empty <content:encoded>.
+    post = _post("b", "2026-06-11", title="B", excerpt="   ")
+    parsed = cast("Any", feedparser.parse(build_feed(_cfg(), [post], _stub_render)))
+    entry = parsed.entries[0]
+    assert "<p>Body of b.</p>" in entry.summary
+    assert not entry.get("content")
+
+
+def test_build_feed_handles_cdata_terminator_in_content() -> None:
+    # A post whose rendered HTML contains the CDATA terminator "]]>" must not
+    # break the feed: lxml splits the CDATA section so the XML stays well-formed.
+    def render(_post_arg: Post) -> str:
+        return "<p>example: ]]> still valid</p>"
+
+    post = _post("b", "2026-06-11", title="B", excerpt="Sum.")
+    xml = build_feed(_cfg(), [post], render)
+    parsed = cast("Any", feedparser.parse(xml))
+    assert not parsed.bozo
+    assert "]]>" in parsed.entries[0].content[0].value
 
 
 pytest.importorskip("zensical")

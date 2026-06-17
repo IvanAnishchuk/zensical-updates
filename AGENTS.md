@@ -57,9 +57,9 @@ shared review focus, quality bar, and intentional-choice list live in
 - Do NOT flag these as bugs: the per-module `from __future__ import annotations`
   and `if TYPE_CHECKING:` guards (the TCH ruff rules are on), the function-scoped
   `from feedgen.feed import FeedGenerator` in `feed.py`, the broad
-  `except Exception` wrapped and re-raised as `FeedError`, or the full post HTML
-  carried in the RSS `<description>` as CDATA (the `content:encoded` split is a
-  tracked follow-up).
+  `except Exception` wrapped and re-raised as `FeedError`, or the feed item body
+  split into a `<description>` excerpt plus full post HTML in `<content:encoded>`
+  as CDATA (a post with no excerpt keeps the full HTML in `<description>`).
 
 <!-- universal:begin -->
 <!--

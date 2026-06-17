@@ -95,10 +95,14 @@ def build_feed(config: Config, posts: Sequence[Post], render: Callable[[Post], s
         entry.title(post.title)
         entry.link(href=post_abs)
         entry.pubDate(_to_datetime(post.date))
-        # TODO(board [zu] "Feed content:encoded + summary/full split"): emit a short
-        # <description> summary plus the full HTML in <content:encoded> via a custom
-        # feedgen extension. feedgen 1.0.0 has no native RSS content module, so v1
-        # carries the full HTML in <description> as CDATA.
+        # The short excerpt goes in <description>; the full rendered HTML goes in
+        # <content:encoded>. feedgen emits both elements when description and content
+        # are set, and declares xmlns:content on the channel. lxml splits any literal
+        # "]]>" in the content so the CDATA stays well-formed. Without a non-blank
+        # excerpt there is no summary, so feedgen carries the full HTML in
+        # <description> instead.
+        if post.excerpt and post.excerpt.strip():
+            entry.description(post.excerpt.strip())
         entry.content(render(post), type="CDATA")
 
     return str(generator.rss_str(pretty=True).decode("utf-8"))

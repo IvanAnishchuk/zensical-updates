@@ -50,8 +50,9 @@ review-process rules below.
   `from feedgen.feed import FeedGenerator` in `feed.py`.
 - `feed.py` reuses zensical's internal render API behind a `FeedError` guard, so
   the broad `except Exception` that wraps and re-raises is intentional.
-- v1 carries the full post HTML in the RSS `<description>` as CDATA; the
-  `content:encoded` summary/full split is a tracked follow-up.
+- The feed puts the post excerpt in the RSS `<description>` and the full post
+  HTML in `<content:encoded>` as CDATA. A post with no excerpt keeps the full
+  HTML in `<description>`, so do not flag that fallback as a bug.
 
 Prefer a few high-confidence, high-severity findings over many style nits that
 ruff and the formatter already cover.

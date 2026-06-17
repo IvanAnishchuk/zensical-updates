@@ -65,9 +65,11 @@ Every key is optional. The defaults above apply when the table is absent.
 
 With `site_url` set in `zensical.toml`, the build writes an RSS 2.0 feed to
 `docs/<base>/feed.xml`, served at `<site_url>/<base>/feed.xml` (for the default
-section, `/updates/feed.xml`). Each item carries the full post HTML, rendered by
-zensical so it matches the site, with every link rewritten to a fully-qualified
-URL for readers off-site. Without `site_url` the build prints a warning and skips
+section, `/updates/feed.xml`). Each item carries a short summary in
+`<description>` (the post excerpt) and the full post HTML in `<content:encoded>`,
+rendered by zensical so it matches the site, with every link rewritten to a
+fully-qualified URL for readers off-site. A post with no excerpt keeps the full
+HTML in `<description>`. Without `site_url` the build prints a warning and skips
 the feed, since an off-site feed needs absolute links.
 
 Two config keys tune it:
