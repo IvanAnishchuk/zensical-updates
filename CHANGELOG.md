@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-06-17
+
 ### Removed
 
 - Dropped support for Python 3.11, 3.12, and 3.13. The package now requires
