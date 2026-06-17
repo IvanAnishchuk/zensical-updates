@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-06-17
+
+### Fixed
+
+- Carry the site sub-path in every emitted link. On a project Pages site served
+  under a base path (e.g. `/eth-protocol-fellowship/`), generated post, tag,
+  category, and archive links dropped the prefix and 404'd. The generator now
+  reads `[project] site_url` and prepends its path, so a link resolves to
+  `/eth-protocol-fellowship/updates/<slug>/`. Root-served sites are unchanged
+  (no `site_url` path means no prefix and no extra slash). The on-disk output
+  dir stays `docs/<base>/`, so only the emitted URLs gain the prefix.
+
 ## [0.1.1] - 2026-06-17
 
 ### Fixed
