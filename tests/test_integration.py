@@ -46,13 +46,19 @@ nav = [
 """
 
 
-def _post(date: str, *, categories: tuple[str, ...] = (), tags: tuple[str, ...] = ()) -> str:
+def _post(
+    date: str,
+    *,
+    categories: tuple[str, ...] = (),
+    tags: tuple[str, ...] = (),
+    body: str = "Some body text for the post.",
+) -> str:
     text = f"---\ndate: {date}\n"
     if categories:
         text += "categories:\n" + "".join(f"  - {c}\n" for c in categories)
     if tags:
         text += "tags:\n" + "".join(f"  - {t}\n" for t in tags)
-    return text + "---\n\nSome body text for the post.\n"
+    return text + f"---\n\n{body}\n"
 
 
 def test_generated_links_resolve_under_strict_build(tmp_path: Path) -> None:
@@ -130,7 +136,13 @@ def test_feed_is_generated_and_links_resolve(tmp_path: Path) -> None:
     src.mkdir()
     (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
     (src / "hello.md").write_text(
-        _post("2026-06-11", categories=("weekly-update",), tags=("epf",)), encoding="utf-8"
+        _post(
+            "2026-06-11",
+            categories=("weekly-update",),
+            tags=("epf",),
+            body="Lead summary sentence.\n\n<!-- more -->\n\nFull body continues here.",
+        ),
+        encoding="utf-8",
     )
 
     cfg = load_config(root / "zensical.toml")
@@ -151,6 +163,13 @@ def test_feed_is_generated_and_links_resolve(tmp_path: Path) -> None:
     parsed = cast("Any", feedparser.parse(feed_file.read_text(encoding="utf-8")))
     assert not parsed.bozo
     assert parsed.entries
+    # The body splits across <description> (excerpt) and <content:encoded> (full
+    # HTML), and the split survives real zensical rendering. The after-more text
+    # appears only in the full content, so this fails if the split regresses.
+    first = parsed.entries[0]
+    assert "Lead summary sentence." in first.summary
+    assert "Full body continues here." not in first.summary
+    assert "Full body continues here." in first.content[0].value
     for entry in parsed.entries:
         assert entry.link.startswith("https://example.github.io/repo/updates/")
         rel = entry.link[len("https://example.github.io/repo") :].strip("/")

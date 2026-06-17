@@ -51,9 +51,9 @@ issue. Do not commit, push, or apply fixes on the author's behalf.
 - `feed.py` reuses zensical's internal render API behind a `FeedError` guard, so
   the broad `except Exception` that wraps and re-raises is intentional. It names
   the supported range `zensical >=0.0.45,<0.1.0`.
-- v1 carries the full post HTML in the RSS `<description>` as CDATA. The
-  `content:encoded` summary/full split is a tracked follow-up (board item
-  "[zu] Feed content:encoded"), so do not re-flag full HTML in `<description>`.
+- The feed puts the post excerpt in the RSS `<description>` and the full post
+  HTML in `<content:encoded>` as CDATA. A post with no excerpt keeps the full
+  HTML in `<description>`, so do not flag that fallback as a bug.
 
 ## Project context
 

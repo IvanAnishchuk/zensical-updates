@@ -69,11 +69,11 @@ reviews:
         and re-raises (`raise FeedError(...) from exc`) is intentional, not a
         blind-except smell. The feed is DETERMINISTIC: every date is set
         explicitly from post dates and no wall-clock value may leak in. Flag any
-        new `datetime.now()` / `date.today()` reaching feed or page output. v1
-        carries the full post HTML in the RSS `<description>` as CDATA; the
-        `content:encoded` summary/full split is a tracked follow-up (board item
-        "[zu] Feed content:encoded"), so do not re-flag full-HTML-in-description
-        as a bug. Generated site-absolute URLs (urls.py) MUST carry the site base
+        new `datetime.now()` / `date.today()` reaching feed or page output. The
+        feed puts the post excerpt in the RSS `<description>` and the full post
+        HTML in `<content:encoded>` as CDATA; a post with no excerpt keeps the
+        full HTML in `<description>`, so do not flag that fallback as a bug.
+        Generated site-absolute URLs (urls.py) MUST carry the site base
         path; zensical does not validate them, and a missing base path 404s on
         project Pages (regression fixed in 0.1.2). Scrutinize URL construction.
         The supported zensical range is `>=0.0.45,<0.1.0`. Coverage floor is 80%

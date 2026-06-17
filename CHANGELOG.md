@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- RSS feed items now split the body: the post excerpt goes in `<description>` and
+  the full rendered HTML goes in `<content:encoded>`. A post with no excerpt keeps
+  the full HTML in `<description>`. feedgen emits both elements natively, so no
+  custom extension is needed.
 - Code-review bot configuration so automated reviewers honor the project's house
   style and skip generated files: `.coderabbit.yaml` (CodeRabbit), `.gemini/`
   (Gemini Code Assist), `code_review.md` with an `AGENTS.md` pointer (Codex), and
