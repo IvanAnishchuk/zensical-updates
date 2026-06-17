@@ -9,7 +9,7 @@ permissions: {}
 
 # Must match the primary Python version in test.yml matrix
 env:
-  PRIMARY_PYTHON: "3.11"
+  PRIMARY_PYTHON: "3.14"
 
 jobs:
   report:

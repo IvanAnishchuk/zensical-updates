@@ -5,7 +5,7 @@ description = "Generate a dated Updates (blog) section for zensical sites as pla
 readme = "README.md"
 license = "CC0-1.0"
 license-files = ["LICENSE.md"]
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 authors = [{ name = "Ivan Anishchuk", email = "ivan@ivananishchuk.net" }]
 keywords = []
 classifiers = [
@@ -14,7 +14,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
@@ -80,7 +80,7 @@ include = [
 ]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py314"
 line-length = 100
 src = ["src", "tests"]
 
@@ -130,7 +130,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.14"
 files = ["src", "tests"]
 strict = true
 warn_unused_configs = true
@@ -138,13 +138,13 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 
 [tool.basedpyright]
-pythonVersion = "3.11"
+pythonVersion = "3.14"
 include = ["src", "tests"]
 typeCheckingMode = "standard"
 reportMissingTypeStubs = false
 
 [tool.ty.environment]
-python-version = "3.11"
+python-version = "3.14"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

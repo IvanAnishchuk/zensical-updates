@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Removed
+
+- Dropped support for Python 3.11, 3.12, and 3.13. The package now requires
+  Python 3.14 or newer. This is a breaking change for consumers still on an
+  older interpreter.
+
 ## [0.1.3] - 2026-06-17
 
 ### Added

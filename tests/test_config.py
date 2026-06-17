@@ -1,8 +1,11 @@
 """Tests for the zensical.toml config loader."""
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from zensical_updates.config import Config, load_config
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_load_config_reads_the_extra_table(tmp_path: Path) -> None:

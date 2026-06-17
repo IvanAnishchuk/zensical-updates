@@ -9,7 +9,7 @@ permissions: {}
 
 # Must match the primary Python version in test.yml matrix
 env:
-  PRIMARY_PYTHON: "3.11"
+  PRIMARY_PYTHON: "3.14"
 
 concurrency:
   group: coverage-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
