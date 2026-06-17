@@ -142,6 +142,26 @@ def test_build_writes_feed_when_site_url_set(tmp_path: Path) -> None:
     assert result.feed_path.exists()
 
 
+def test_build_main_index_has_browse_nav(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", categories=("weekly-update",), tags=("epf",))
+    build_site(Config(), tmp_path)
+    index = (tmp_path / "docs" / "updates" / "index.md").read_text(encoding="utf-8")
+    assert "Browse: [Tags](/updates/tags/)" in index
+
+
+def test_build_browse_nav_drops_disabled_indexes(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    _write_post(src, "hello", "2026-06-11", tags=("epf",))
+    build_site(Config(emit_categories=False), tmp_path)
+    index = (tmp_path / "docs" / "updates" / "index.md").read_text(encoding="utf-8")
+    assert "[Tags](/updates/tags/)" in index
+    assert "[Categories]" not in index
+
+
 def test_build_respects_feed_limit(tmp_path: Path) -> None:
     pytest.importorskip("zensical")
     _write_site(tmp_path, site_url="https://example.github.io/repo/")

@@ -94,6 +94,14 @@ def test_generated_links_resolve_under_strict_build(tmp_path: Path) -> None:
     assert (site / "updates" / "tags" / "epf" / "index.html").exists()
     assert (site / "updates" / "categories" / "weekly-update" / "index.html").exists()
 
+    # The Tags index renders the frequency-ordered cloud and the browse nav links
+    # resolve to generated pages.
+    tags_index = (root / "docs" / "updates" / "tags" / "index.md").read_text(encoding="utf-8")
+    assert "[epf](/updates/tags/epf/) (2)" in tags_index  # epf is on both posts
+    for target in ("tags", "categories", "archive"):
+        page = root / "site" / "updates" / target / "index.html"
+        assert page.exists(), f"no {target} index page"
+
 
 def test_generated_links_resolve_on_a_subpath_site(tmp_path: Path) -> None:
     # The bug: a project Pages site served under /repo/ got links that omitted
