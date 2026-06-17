@@ -47,6 +47,10 @@ def build(root: _RootOption = Path(), config: _ConfigOption = None) -> None:
     except PostError as exc:
         console.print(f"[red]error:[/red] {exc}")
         raise typer.Exit(1) from exc
+    if cfg.emit_feed and not cfg.site_url:
+        console.print(
+            "[yellow]warning:[/yellow] RSS feed skipped: set site_url in zensical.toml to enable it"
+        )
     console.print(
         f"Wrote {len(result.written)} files ({len(result.post_urls)} posts) -> {result.out_dir}"
     )

@@ -54,3 +54,13 @@ def test_build_reports_an_invalid_post(tmp_path: Path) -> None:
     result = runner.invoke(app, ["build", "--root", str(tmp_path)])
     assert result.exit_code == 1
     assert "date" in result.output
+
+
+def test_build_warns_when_site_url_missing(tmp_path: Path) -> None:
+    (tmp_path / "zensical.toml").write_text('[project]\nsite_name = "S"\n', encoding="utf-8")
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n", encoding="utf-8")
+    result = runner.invoke(app, ["build", "--root", str(tmp_path)])
+    assert result.exit_code == 0
+    assert "feed skipped" in result.stdout.lower()
