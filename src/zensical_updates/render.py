@@ -123,6 +123,13 @@ def _term_cloud(groups: Mapping[str, list[Post]], url: Callable[[str], str], *, 
 
 
 def _term_index(title: str, body: str, nav: str) -> str:
+    """Render a taxonomy or archive index page: heading, nav, then body.
+
+    ``nav`` is the bare sibling-nav line produced by ``render_browse``
+    (e.g. ``"[Updates](...) · [Tags](...)"``).  The main Updates index
+    adds its own ``Browse:`` prefix; these taxonomy pages use the nav line
+    directly, without a prefix.
+    """
     parts = [f"# {title}", ""]
     if nav:
         parts += [nav, ""]
@@ -166,8 +173,9 @@ def render_archive_index(
     lines = ["# Archive", ""]
     if nav:
         lines += [nav, ""]
-    lines += [
+    years = [
         f"- [{year}]({year_url(base, year)}) ({len(year_posts)})"
         for year, year_posts in group_by_year(posts).items()
     ]
+    lines += years or [_EMPTY]
     return "\n".join(lines) + "\n"

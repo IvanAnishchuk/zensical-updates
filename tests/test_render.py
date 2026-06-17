@@ -164,6 +164,14 @@ def test_category_index_empty_has_placeholder() -> None:
     md = render_category_index(group_by_category([]), "updates")
     assert "# Categories" in md
     assert "_No categories yet._" in md
+    _assert_brackets_are_links(md)
+
+
+def test_archive_index_empty_has_placeholder() -> None:
+    md = render_archive_index([], "updates")
+    assert "# Archive" in md
+    assert "No updates yet" in md
+    _assert_brackets_are_links(md)
 
 
 def test_index_has_browse_line_for_enabled_indexes() -> None:
