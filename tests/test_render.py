@@ -122,3 +122,45 @@ def test_browse_returns_only_updates_when_others_disabled() -> None:
 def test_browse_is_empty_on_index_with_all_others_disabled() -> None:
     nav = render_browse("updates", current="index", tags=False, categories=False, archive=False)
     assert nav == ""
+
+
+def test_tag_index_orders_by_count_then_slug() -> None:
+    posts = [
+        _post("a", tags=("epf", "news")),
+        _post("b", tags=("epf", "news")),
+        _post("c", tags=("epf",)),
+        _post("d", tags=("zeta",)),
+    ]
+    md = render_tag_index(group_by_tag(posts), "updates")
+    assert md.index("[epf](/updates/tags/epf/) (3)") < md.index("[news](/updates/tags/news/) (2)")
+    assert md.index("[news](/updates/tags/news/) (2)") < md.index("[zeta](/updates/tags/zeta/) (1)")
+    assert "- [" not in md
+    assert " · " in md
+    _assert_brackets_are_links(md)
+
+
+def test_tag_index_ties_break_by_slug() -> None:
+    posts = [_post("a", tags=("beta", "alpha"))]
+    md = render_tag_index(group_by_tag(posts), "updates")
+    assert md.index("[alpha]") < md.index("[beta]")
+
+
+def test_tag_index_empty_has_placeholder() -> None:
+    md = render_tag_index(group_by_tag([]), "updates")
+    assert "# Tags" in md
+    assert "_No tags yet._" in md
+    _assert_brackets_are_links(md)
+
+
+def test_tag_index_has_sibling_nav_without_self_link() -> None:
+    md = render_tag_index(group_by_tag([_post("a", tags=("epf",))]), "updates")
+    assert "[Updates](/updates/)" in md
+    assert "[Categories](/updates/categories/)" in md
+    assert "[Archive](/updates/archive/)" in md
+    assert "[Tags](/updates/tags/)" not in md
+
+
+def test_category_index_empty_has_placeholder() -> None:
+    md = render_category_index(group_by_category([]), "updates")
+    assert "# Categories" in md
+    assert "_No categories yet._" in md

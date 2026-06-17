@@ -16,6 +16,7 @@ from zensical_updates.urls import (
     category_url,
     index_url,
     post_url,
+    slugify,
     tag_index_url,
     tag_url,
     year_url,
@@ -98,18 +99,44 @@ def render_category(category: str, posts: Iterable[Post], base: str) -> str:
     return f"# Category: {category}\n\n{render_listing(posts, base)}\n"
 
 
-def _term_index(title: str, groups: Mapping[str, list[Post]], url: Callable[[str], str]) -> str:
-    lines = [f"# {title}", ""]
-    lines += [f"- [{term}]({url(term)}) ({len(posts)})" for term, posts in groups.items()]
-    return "\n".join(lines) + "\n"
+def _term_cloud(groups: Mapping[str, list[Post]], url: Callable[[str], str], *, empty: str) -> str:
+    """Render terms as one inline line, ordered by post count desc then slug asc."""
+    if not groups:
+        return empty
+    items = sorted(groups.items(), key=lambda kv: (-len(kv[1]), slugify(kv[0])))
+    return " · ".join(f"[{term}]({url(term)}) ({len(posts)})" for term, posts in items)
 
 
-def render_tag_index(groups: Mapping[str, list[Post]], base: str) -> str:
-    return _term_index("Tags", groups, lambda t: tag_url(base, t))
+def _term_index(title: str, body: str, nav: str) -> str:
+    parts = [f"# {title}", ""]
+    if nav:
+        parts += [nav, ""]
+    parts.append(body)
+    return "\n".join(parts) + "\n"
 
 
-def render_category_index(groups: Mapping[str, list[Post]], base: str) -> str:
-    return _term_index("Categories", groups, lambda c: category_url(base, c))
+def render_tag_index(
+    groups: Mapping[str, list[Post]],
+    base: str,
+    *,
+    emit_categories: bool = True,
+    emit_archive: bool = True,
+) -> str:
+    nav = render_browse(base, current="tags", categories=emit_categories, archive=emit_archive)
+    cloud = _term_cloud(groups, lambda t: tag_url(base, t), empty="_No tags yet._")
+    return _term_index("Tags", cloud, nav)
+
+
+def render_category_index(
+    groups: Mapping[str, list[Post]],
+    base: str,
+    *,
+    emit_tags: bool = True,
+    emit_archive: bool = True,
+) -> str:
+    nav = render_browse(base, current="categories", tags=emit_tags, archive=emit_archive)
+    cloud = _term_cloud(groups, lambda c: category_url(base, c), empty="_No categories yet._")
+    return _term_index("Categories", cloud, nav)
 
 
 def render_archive_index(posts: Iterable[Post], base: str) -> str:
