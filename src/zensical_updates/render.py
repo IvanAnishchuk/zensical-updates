@@ -81,10 +81,25 @@ def render_listing(posts: Iterable[Post], base: str) -> str:
     return "\n\n".join(entries) if entries else _EMPTY
 
 
-def render_index(posts: Iterable[Post], base: str, *, intro: str = "") -> str:
-    """Render the section landing: the intro (or a default H1) plus the listing."""
+def render_index(
+    posts: Iterable[Post],
+    base: str,
+    *,
+    intro: str = "",
+    emit_tags: bool = True,
+    emit_categories: bool = True,
+    emit_archive: bool = True,
+) -> str:
+    """Render the section landing: the intro (or a default H1), a browse nav, the listing."""
     head = intro.strip() or "# Updates"
-    return f"{head}\n\n{render_listing(posts, base)}\n"
+    nav = render_browse(
+        base, current="index", tags=emit_tags, categories=emit_categories, archive=emit_archive
+    )
+    parts = [head, ""]
+    if nav:
+        parts += [f"Browse: {nav}", ""]
+    parts.append(render_listing(posts, base))
+    return "\n".join(parts) + "\n"
 
 
 def render_year(year: int, posts: Iterable[Post], base: str) -> str:
@@ -139,9 +154,18 @@ def render_category_index(
     return _term_index("Categories", cloud, nav)
 
 
-def render_archive_index(posts: Iterable[Post], base: str) -> str:
-    """Render the archive landing: each year, linked, with its post count."""
+def render_archive_index(
+    posts: Iterable[Post],
+    base: str,
+    *,
+    emit_tags: bool = True,
+    emit_categories: bool = True,
+) -> str:
+    """Render the archive landing: a sibling nav, then each year linked with its count."""
+    nav = render_browse(base, current="archive", tags=emit_tags, categories=emit_categories)
     lines = ["# Archive", ""]
+    if nav:
+        lines += [nav, ""]
     lines += [
         f"- [{year}]({year_url(base, year)}) ({len(year_posts)})"
         for year, year_posts in group_by_year(posts).items()

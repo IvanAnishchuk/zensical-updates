@@ -164,3 +164,37 @@ def test_category_index_empty_has_placeholder() -> None:
     md = render_category_index(group_by_category([]), "updates")
     assert "# Categories" in md
     assert "_No categories yet._" in md
+
+
+def test_index_has_browse_line_for_enabled_indexes() -> None:
+    md = render_index([_post("a")], "updates", intro="# Updates\n\nHi.")
+    assert (
+        "Browse: [Tags](/updates/tags/)"
+        " · [Categories](/updates/categories/)"
+        " · [Archive](/updates/archive/)"
+    ) in md
+    assert "[Updates]" not in md
+    _assert_brackets_are_links(md)
+
+
+def test_index_browse_respects_disabled_indexes() -> None:
+    md = render_index([_post("a")], "updates", emit_categories=False, emit_archive=False)
+    assert "Browse: [Tags](/updates/tags/)" in md
+    assert "[Categories]" not in md
+    assert "[Archive]" not in md
+
+
+def test_index_has_no_browse_line_when_all_indexes_disabled() -> None:
+    md = render_index(
+        [_post("a")], "updates", emit_tags=False, emit_categories=False, emit_archive=False
+    )
+    assert "Browse:" not in md
+
+
+def test_archive_index_has_sibling_nav() -> None:
+    md = render_archive_index([_post("a", date=(2026, 1, 1))], "updates")
+    assert "[Updates](/updates/)" in md
+    assert "[Tags](/updates/tags/)" in md
+    assert "[Categories](/updates/categories/)" in md
+    assert "[Archive]" not in md
+    assert "[2026](/updates/archive/2026/)" in md
