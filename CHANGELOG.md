@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-06-17
+
 ### Added
 
 - RSS 2.0 feed at `docs/<base>/feed.xml`, generated when `site_url` is set. Each
