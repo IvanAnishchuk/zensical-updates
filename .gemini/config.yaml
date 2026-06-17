@@ -1,0 +1,31 @@
+# Gemini Code Assist review configuration for zensical-updates.
+# https://developers.google.com/gemini-code-assist/docs/customize-gemini-behavior-github
+#
+# Policy: Gemini is a BEST-EFFORT second opinion, like CodeRabbit. The real gate
+# is strict CI plus a human approval; a passing or empty Gemini check is NOT an
+# approval. Review behavior here, the style guide, and the intentional-choice
+# list live in .gemini/styleguide.md so deliberate design is not re-flagged.
+# Re-trigger a review with `/gemini review`; Gemini sometimes errors transiently
+# on a first pass.
+
+have_fun: false
+
+code_review:
+  disable: false
+  # MEDIUM keeps low-value nits out; ruff/type checkers already cover style.
+  comment_severity_threshold: MEDIUM
+  # No artificial cap on a thorough pass.
+  max_review_comments: -1
+  pull_request_opened:
+    help: false
+    summary: true
+    code_review: true
+
+# Generated or lock files: skip review, mirror of the CodeRabbit path_filters.
+ignore_patterns:
+  - "uv.lock"
+  - "requirements.txt"
+  - "requirements-dev.txt"
+  - "dist/**"
+  - "site/**"
+  - ".reports/**"
