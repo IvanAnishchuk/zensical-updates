@@ -145,6 +145,12 @@ def test_tag_index_ties_break_by_slug() -> None:
     assert md.index("[alpha]") < md.index("[beta]")
 
 
+def test_tag_index_is_byte_stable() -> None:
+    posts = [_post("a", tags=("epf", "news")), _post("b", tags=("epf",))]
+    groups = group_by_tag(posts)
+    assert render_tag_index(groups, "updates") == render_tag_index(groups, "updates")
+
+
 def test_tag_index_empty_has_placeholder() -> None:
     md = render_tag_index(group_by_tag([]), "updates")
     assert "# Tags" in md
