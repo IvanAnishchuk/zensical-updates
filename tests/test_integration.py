@@ -164,7 +164,7 @@ def test_feed_is_generated_and_links_resolve(tmp_path: Path) -> None:
     feed_file = root / "site" / "updates" / "feed.xml"
     assert feed_file.exists()
 
-    parsed = cast("Any", feedparser.parse(feed_file.read_text(encoding="utf-8")))
+    parsed = cast(Any, feedparser.parse(feed_file.read_text(encoding="utf-8")))
     assert not parsed.bozo
     assert parsed.entries
     # The body splits across <description> (excerpt) and <content:encoded> (full
