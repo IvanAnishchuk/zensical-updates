@@ -31,6 +31,18 @@ def category_url(base: str, category: str) -> str:
     return f"/{base}/categories/{slugify(category)}/"
 
 
+def index_url(base: str) -> str:
+    return f"/{base}/"
+
+
+def tag_index_url(base: str) -> str:
+    return f"/{base}/tags/"
+
+
+def category_index_url(base: str) -> str:
+    return f"/{base}/categories/"
+
+
 def archive_url(base: str) -> str:
     return f"/{base}/archive/"
 

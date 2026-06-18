@@ -75,24 +75,53 @@ def build_site(config: Config, root: Path) -> BuildResult:
         result.post_urls.append(post_url(base, post.slug))
 
     intro = _read_intro(source_dir / config.intro)
-    _write(out_dir / "index.md", render_index(posts, base, intro=intro), result)
+    _write(
+        out_dir / "index.md",
+        render_index(
+            posts,
+            base,
+            intro=intro,
+            emit_tags=config.emit_tags,
+            emit_categories=config.emit_categories,
+            emit_archive=config.emit_archive,
+        ),
+        result,
+    )
 
     if config.emit_archive:
-        _write(out_dir / "archive" / "index.md", render_archive_index(posts, base), result)
+        _write(
+            out_dir / "archive" / "index.md",
+            render_archive_index(
+                posts, base, emit_tags=config.emit_tags, emit_categories=config.emit_categories
+            ),
+            result,
+        )
         for year, year_posts in group_by_year(posts).items():
             page = render_year(year, year_posts, base)
             _write(out_dir / "archive" / str(year) / "index.md", page, result)
 
     if config.emit_tags:
         tags = group_by_tag(posts)
-        _write(out_dir / "tags" / "index.md", render_tag_index(tags, base), result)
+        _write(
+            out_dir / "tags" / "index.md",
+            render_tag_index(
+                tags, base, emit_categories=config.emit_categories, emit_archive=config.emit_archive
+            ),
+            result,
+        )
         for tag, tag_posts in tags.items():
             page = render_tag(tag, tag_posts, base)
             _write(out_dir / "tags" / slugify(tag) / "index.md", page, result)
 
     if config.emit_categories:
         cats = group_by_category(posts)
-        _write(out_dir / "categories" / "index.md", render_category_index(cats, base), result)
+        _write(
+            out_dir / "categories" / "index.md",
+            render_category_index(
+                cats, base, emit_tags=config.emit_tags, emit_archive=config.emit_archive
+            ),
+            result,
+        )
         for cat, cat_posts in cats.items():
             page = render_category(cat, cat_posts, base)
             _write(out_dir / "categories" / slugify(cat) / "index.md", page, result)

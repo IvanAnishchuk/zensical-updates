@@ -80,6 +80,14 @@ emit_feed = true   # generate feed.xml (default)
 feed_limit = 0     # max items, 0 means no cap (default)
 ```
 
+## Taxonomy pages
+
+The Tags and Categories index pages list their terms as a frequency-ordered
+cloud: busiest term first, with each term's post count. The main Updates index
+and each index page carry a `Browse:` line linking the Tags, Categories, and
+Archive index pages, so a reader can move between them. Only the indexes you
+enable (`emit_tags`, `emit_categories`, `emit_archive`) appear in the links.
+
 ## CLI
 
 ```bash

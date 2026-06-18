@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   an expanded `.github/copilot-instructions.md` (Copilot). Each encodes the same
   review focus (URL base-path correctness, feed determinism, public-API
   discipline) and the intentional-choice list, and defers to `AGENTS.md`.
+- Tags and Categories index pages now render a frequency-ordered cloud (busiest
+  term first, with post counts). The main Updates index and each taxonomy/archive
+  index carry a `Browse:` nav linking the enabled index pages.
 
 ### Changed
 
