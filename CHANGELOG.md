@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Dropped `from __future__ import annotations` and the `if TYPE_CHECKING:`
+  guards across the codebase, and retired the flake8-type-checking (TCH) ruff
+  rule. The project targets Python 3.14+, where PEP 649 defers annotation
+  evaluation, so the future import and the type-only-import guarding are no
+  longer needed. Internal only; no API or output change.
+
 ### Fixed
 
 - Release pipeline: the `pypi` deployment environment now matches the release
