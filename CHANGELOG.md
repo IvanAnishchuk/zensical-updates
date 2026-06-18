@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-06-18
+
 ### Added
 
 - RSS feed items now split the body: the post excerpt goes in `<description>` and
