@@ -43,9 +43,13 @@ issue. Do not commit, push, or apply fixes on the author's behalf.
 
 ## Intentional choices (do not flag these as bugs)
 
-- Every module opens with `from __future__ import annotations`. Type-only
-  imports sit under `if TYPE_CHECKING:` because the flake8-type-checking (TCH)
-  ruff rules are on, so that guarding is required.
+- Modules do not use `from __future__ import annotations`. The project targets
+  Python 3.14+, where PEP 649 defers annotation evaluation, so the future import
+  is unnecessary. All imports, including type-only ones, sit at the top of the
+  file; there are no `if TYPE_CHECKING:` guards and the TCH ruff rule is off. Do
+  not suggest re-adding the future import or moving imports under `TYPE_CHECKING`.
+- Declare any type alias with the `type X = ...` statement (PEP 695), not
+  `X: TypeAlias = ...`.
 - Imports go at the top of the file. The one deliberate function-scoped import
   is `from feedgen.feed import FeedGenerator` in `feed.py`.
 - `feed.py` reuses zensical's internal render API behind a `FeedError` guard, so

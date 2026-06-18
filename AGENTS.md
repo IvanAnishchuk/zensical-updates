@@ -54,8 +54,12 @@ shared review focus, quality bar, and intentional-choice list live in
 - Scrutinize **URL base-path correctness** (`urls.py` paths are unvalidated and
   404 on project Pages if the site base path is missing) and **feed determinism**
   (no `datetime.now()` / `date.today()` may leak into feed or page output).
-- Do NOT flag these as bugs: the per-module `from __future__ import annotations`
-  and `if TYPE_CHECKING:` guards (the TCH ruff rules are on), the function-scoped
+- Modules do NOT use `from __future__ import annotations` (the project targets
+  Python 3.14+, where PEP 649 defers annotation evaluation); all imports,
+  including type-only ones, sit at the top of the file with no `if TYPE_CHECKING:`
+  guards and the TCH rule off. Do not suggest re-adding either. Declare any type
+  alias with `type X = ...` (PEP 695).
+- Do NOT flag these as bugs: the function-scoped
   `from feedgen.feed import FeedGenerator` in `feed.py`, the broad
   `except Exception` wrapped and re-raised as `FeedError`, or the feed item body
   split into a `<description>` excerpt plus full post HTML in `<content:encoded>`
