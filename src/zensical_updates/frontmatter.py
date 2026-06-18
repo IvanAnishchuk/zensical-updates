@@ -6,8 +6,6 @@ then the Markdown body. The authoring convention requires block-style lists
 zensical's strict build, so we never emit one, and posts must not carry one.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 import yaml

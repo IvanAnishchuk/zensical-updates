@@ -6,8 +6,6 @@ Every link the generator emits is one of these directory URLs. They are
 site-absolute, which zensical does not validate, so they must be exactly right.
 """
 
-from __future__ import annotations
-
 import re
 from urllib.parse import urlparse
 
