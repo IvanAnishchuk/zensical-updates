@@ -1,16 +1,11 @@
 """Tests for the command-line interface."""
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from typer.testing import CliRunner
 
 import zensical_updates as lib
 from zensical_updates.cli import app
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 runner = CliRunner()
 

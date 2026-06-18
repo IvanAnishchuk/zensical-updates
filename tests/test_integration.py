@@ -6,19 +6,15 @@ strict link validator rejects. Both ship green without this end-to-end check,
 because zensical does not validate site-absolute links.
 """
 
-from __future__ import annotations
-
 import subprocess
 import sys
-from typing import TYPE_CHECKING, Any, cast
+from pathlib import Path
+from typing import Any, cast
 
 import feedparser
 import pytest
 
 from zensical_updates import Config, build_site, load_config
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 pytest.importorskip("zensical")
 
