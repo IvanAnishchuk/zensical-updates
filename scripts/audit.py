@@ -6,8 +6,6 @@ Usage:
     uv run python scripts/audit.py
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import subprocess

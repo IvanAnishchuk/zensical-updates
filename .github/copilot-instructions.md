@@ -44,10 +44,15 @@ review-process rules below.
 
 ## Intentional choices (do not flag as bugs)
 
-- Every module opens with `from __future__ import annotations`; type-only
-  imports sit under `if TYPE_CHECKING:` because the flake8-type-checking (TCH)
-  ruff rules are on. The one deliberate function-scoped import is
-  `from feedgen.feed import FeedGenerator` in `feed.py`.
+- Modules do not use `from __future__ import annotations`. The project targets
+  Python 3.14+, where PEP 649 defers annotation evaluation. All imports,
+  including type-only ones, sit at the top of the file; there are no
+  `if TYPE_CHECKING:` guards and the TCH ruff rule is off. Do not suggest
+  re-adding the future import or moving imports under `TYPE_CHECKING`. The one
+  deliberate function-scoped import is `from feedgen.feed import FeedGenerator`
+  in `feed.py`.
+- Declare any type alias with the `type X = ...` statement (PEP 695), not
+  `X: TypeAlias = ...`.
 - `feed.py` reuses zensical's internal render API behind a `FeedError` guard, so
   the broad `except Exception` that wraps and re-raises is intentional.
 - The feed puts the post excerpt in the RSS `<description>` and the full post

@@ -1,7 +1,5 @@
 """Tests for the public API surface."""
 
-from __future__ import annotations
-
 import zensical_updates as lib
 
 

@@ -5,11 +5,10 @@ real ``[text](url)`` links, never a bare ``[label]``: zensical's strict build
 reads a bare bracket as an unresolved reference link and fails.
 """
 
-from __future__ import annotations
+from collections.abc import Callable, Iterable, Mapping
+from typing import Literal
 
-from typing import TYPE_CHECKING
-
-from zensical_updates.model import group_by_year
+from zensical_updates.model import Post, group_by_year
 from zensical_updates.urls import (
     archive_url,
     category_index_url,
@@ -21,12 +20,6 @@ from zensical_updates.urls import (
     tag_url,
     year_url,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Mapping
-    from typing import Literal
-
-    from zensical_updates.model import Post
 
 _EMPTY = "_No updates yet._"
 

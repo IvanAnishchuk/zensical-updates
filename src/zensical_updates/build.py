@@ -6,12 +6,11 @@ pages). The output tree is regenerated each run and is meant to be gitignored.
 The source tree is read-only here, so committed prose is never touched.
 """
 
-from __future__ import annotations
-
 import shutil
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from pathlib import Path
 
+from zensical_updates.config import Config
 from zensical_updates.feed import build_feed, make_renderer
 from zensical_updates.frontmatter import split_front_matter
 from zensical_updates.model import (
@@ -30,11 +29,6 @@ from zensical_updates.render import (
     render_year,
 )
 from zensical_updates.urls import post_url, slugify
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from zensical_updates.config import Config
 
 
 @dataclass

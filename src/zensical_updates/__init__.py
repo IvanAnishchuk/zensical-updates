@@ -5,8 +5,6 @@ The public API is re-exported here and listed in `__all__` — listing names in
 type checkers (mypy `strict` / basedpyright) and the autodoc tooling.
 """
 
-from __future__ import annotations
-
 from importlib.metadata import version
 
 from zensical_updates.build import BuildResult, build_site, clean_site

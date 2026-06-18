@@ -6,13 +6,15 @@ assembles the XML. Output is deterministic: every date is set explicitly, so no
 wall-clock value leaks in.
 """
 
-from __future__ import annotations
-
 import datetime
-from typing import TYPE_CHECKING, Any
+from collections.abc import Callable, Sequence
+from pathlib import Path
+from typing import Any
 
 import lxml.html
 
+from zensical_updates.config import Config
+from zensical_updates.model import Post
 from zensical_updates.urls import absolute_url, post_url
 
 _zensical_parse_config: Any | None = None
@@ -22,13 +24,6 @@ try:
     from zensical.markdown.render import render as _zensical_render
 except ImportError:  # pragma: no cover - zensical is a pinned dep; this guards an API move
     pass
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
-
-    from zensical_updates.config import Config
-    from zensical_updates.model import Post
 
 
 class FeedError(RuntimeError):

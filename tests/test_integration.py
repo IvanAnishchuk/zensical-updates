@@ -6,19 +6,15 @@ strict link validator rejects. Both ship green without this end-to-end check,
 because zensical does not validate site-absolute links.
 """
 
-from __future__ import annotations
-
 import subprocess
 import sys
-from typing import TYPE_CHECKING, Any, cast
+from pathlib import Path
+from typing import Any, cast
 
 import feedparser
 import pytest
 
 from zensical_updates import Config, build_site, load_config
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 pytest.importorskip("zensical")
 
@@ -168,7 +164,7 @@ def test_feed_is_generated_and_links_resolve(tmp_path: Path) -> None:
     feed_file = root / "site" / "updates" / "feed.xml"
     assert feed_file.exists()
 
-    parsed = cast("Any", feedparser.parse(feed_file.read_text(encoding="utf-8")))
+    parsed = cast(Any, feedparser.parse(feed_file.read_text(encoding="utf-8")))
     assert not parsed.bozo
     assert parsed.entries
     # The body splits across <description> (excerpt) and <content:encoded> (full
