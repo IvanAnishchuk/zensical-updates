@@ -6,17 +6,12 @@ URL segment. Front matter carries the date and taxonomies; the body feeds the
 excerpt and the rendered page.
 """
 
-from __future__ import annotations
-
 import datetime
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from zensical_updates.frontmatter import split_front_matter
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
-    from pathlib import Path
 
 
 class PostError(ValueError):

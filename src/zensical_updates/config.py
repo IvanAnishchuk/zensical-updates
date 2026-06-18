@@ -6,15 +6,11 @@ The site's own ``[project] site_url`` is read too, so emitted links can carry th
 sub-path a project Pages deploy is served under.
 """
 
-from __future__ import annotations
-
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 @dataclass(frozen=True)
