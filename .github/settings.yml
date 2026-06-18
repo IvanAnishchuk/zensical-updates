@@ -74,18 +74,29 @@ branches:
       required_signatures: true
 
 environments:
+  # Releases publish from a vX.Y.Z tag, so the policy must match tags, not
+  # branches. A branch-typed "v*.*.*" never matches a tag ref and silently
+  # blocks the deploy. A required reviewer gates the actual PyPI publish.
   - name: pypi
     wait_timer: 0
+    reviewers:
+      - id: 3095764
+        type: 'User'
     deployment_branch_policy:
       protected_branches: false
       custom_branch_policies: true
       custom_branches:
-        - main
-        - "v*.*.*"
+        - name: "v*.*.*"
+          type: tag
+  # testpypi deploys from main (manual workflow_dispatch) and from pre-release
+  # tags (vX.Y.Zrc1 etc.), so it needs both a branch and a tag policy.
   - name: testpypi
     wait_timer: 0
     deployment_branch_policy:
       protected_branches: false
       custom_branch_policies: true
       custom_branches:
-        - main
+        - name: main
+          type: branch
+        - name: "v*.*.*"
+          type: tag

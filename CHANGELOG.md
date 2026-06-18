@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Release pipeline: the `pypi` deployment environment now matches the release
+  tag. Its `v*.*.*` policy was typed as a branch, which never matches a `vX.Y.Z`
+  tag, so the publish was blocked. The policy is now tag-typed, and a required
+  reviewer gates the PyPI publish. `testpypi` gained a matching tag policy so
+  pre-release tags can deploy.
+
 ## [0.1.5] - 2026-06-18
 
 ### Added
