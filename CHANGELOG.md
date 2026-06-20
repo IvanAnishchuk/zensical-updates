@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   tag, so the publish was blocked. The policy is now tag-typed, and a required
   reviewer gates the PyPI publish. `testpypi` gained a matching tag policy so
   pre-release tags can deploy.
+- Branch protection on `main` now applies. The `settings.yml` protection block
+  omitted the `restrictions` key, and the Settings app skips the whole block
+  unless every top-level protection key is present (set to `null` when unused).
+  Added `restrictions: null`, so the declared review and status-check rules take
+  effect.
 
 ### Security
 
