@@ -23,6 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   reviewer gates the PyPI publish. `testpypi` gained a matching tag policy so
   pre-release tags can deploy.
 
+### Security
+
+- Bump `msgpack` to 1.2.1 (GHSA-6v7p-g79w-8964). The 1.2.0 streaming `Unpacker`
+  could crash with a SEGV when reused after an error, a DoS risk on untrusted
+  input, though it is a dev-only transitive dependency (via `cachecontrol`) so
+  the published package never shipped it. The pre-push `pip-audit` gate flags it
+  on every push.
+
 ## [0.1.5] - 2026-06-18
 
 ### Added
