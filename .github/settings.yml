@@ -72,6 +72,11 @@ branches:
       allow_deletions: false
       required_conversation_resolution: true
       required_signatures: true
+      # `restrictions` is REQUIRED by the Settings app. Omitting a top-level
+      # protection key makes the app silently skip the ENTIRE branch-protection
+      # sync. null = no push restrictions (user/team restrictions are
+      # organization-only, so a personal repo cannot set them anyway).
+      restrictions: null
 
 environments:
   # Releases publish from a vX.Y.Z tag, so the policy must match tags, not
