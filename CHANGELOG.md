@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- `uv.lock` is now the single source of truth for dependencies.
+  `requirements.txt` / `requirements-dev.txt` are no longer committed; they are
+  generated on demand. `scripts/regen_requirements.py` gained a `--stdout`
+  (pipe one set) and `--output-dir DIR` (write both into a directory) mode, and
+  `scripts/audit.py` now exports into a temporary directory for pip-audit and
+  SBOM rather than reading committed files. The release SBOM step exports
+  prod-only requirements through the helper. A Dependabot bump no longer needs
+  a committed-requirements regen to pass audit.
+- Merge policy: only merge commits are allowed on this repo now.
+  `.github/settings.yml` sets `allow_squash_merge` and `allow_rebase_merge` to
+  `false` so history is preserved.
+
 - Dropped `from __future__ import annotations` and the `if TYPE_CHECKING:`
   guards across the codebase, and retired the flake8-type-checking (TCH) ruff
   rule. The project targets Python 3.14+, where PEP 649 defers annotation
@@ -27,6 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   unless every top-level protection key is present (set to `null` when unused).
   Added `restrictions: null`, so the declared review and status-check rules take
   effect.
+
+### Removed
+
+- Committed `requirements.txt` and `requirements-dev.txt`, and the
+  `regen-requirements` pre-commit hook that kept them in sync. Generated on
+  demand from `uv.lock` instead.
 
 ### Security
 
