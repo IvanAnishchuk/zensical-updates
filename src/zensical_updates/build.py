@@ -28,17 +28,36 @@ from zensical_updates.render import (
     render_tag_index,
     render_year,
 )
-from zensical_updates.urls import post_url, slugify
+from zensical_updates.sitemap import build_sitemap
+from zensical_updates.urls import (
+    archive_url,
+    category_index_url,
+    category_url,
+    index_url,
+    post_url,
+    slugify,
+    tag_index_url,
+    tag_url,
+    year_url,
+)
 
 
 @dataclass
 class BuildResult:
-    """What a build produced: the output dir, files written, and post URLs."""
+    """What a build produced: the output dir, files written, and page URLs.
+
+    ``page_urls`` is the site-absolute URL of every generated content page (the
+    index, each post, and the archive and taxonomy pages), recorded as it is
+    written so the sitemap lists exactly those. The feed and sitemap files land in
+    ``written`` but not here. ``post_urls`` is the post subset.
+    """
 
     out_dir: Path
     written: list[Path] = field(default_factory=list)
     post_urls: list[str] = field(default_factory=list)
+    page_urls: list[str] = field(default_factory=list)
     feed_path: Path | None = None
+    sitemap_path: Path | None = None
 
 
 def clean_site(config: Config, root: Path) -> None:
@@ -65,8 +84,10 @@ def build_site(config: Config, root: Path) -> BuildResult:
     for post in posts:
         dest = out_dir / f"{post.slug}.md"
         shutil.copyfile(post.source_path, dest)
+        url = post_url(base, post.slug)
         result.written.append(dest)
-        result.post_urls.append(post_url(base, post.slug))
+        result.post_urls.append(url)
+        result.page_urls.append(url)
 
     intro = _read_intro(source_dir / config.intro)
     _write(
@@ -79,6 +100,7 @@ def build_site(config: Config, root: Path) -> BuildResult:
             emit_categories=config.emit_categories,
             emit_archive=config.emit_archive,
         ),
+        index_url(base),
         result,
     )
 
@@ -88,11 +110,12 @@ def build_site(config: Config, root: Path) -> BuildResult:
             render_archive_index(
                 posts, base, emit_tags=config.emit_tags, emit_categories=config.emit_categories
             ),
+            archive_url(base),
             result,
         )
         for year, year_posts in group_by_year(posts).items():
             page = render_year(year, year_posts, base)
-            _write(out_dir / "archive" / str(year) / "index.md", page, result)
+            _write(out_dir / "archive" / str(year) / "index.md", page, year_url(base, year), result)
 
     if config.emit_tags:
         tags = group_by_tag(posts)
@@ -101,11 +124,12 @@ def build_site(config: Config, root: Path) -> BuildResult:
             render_tag_index(
                 tags, base, emit_categories=config.emit_categories, emit_archive=config.emit_archive
             ),
+            tag_index_url(base),
             result,
         )
         for tag, tag_posts in tags.items():
             page = render_tag(tag, tag_posts, base)
-            _write(out_dir / "tags" / slugify(tag) / "index.md", page, result)
+            _write(out_dir / "tags" / slugify(tag) / "index.md", page, tag_url(base, tag), result)
 
     if config.emit_categories:
         cats = group_by_category(posts)
@@ -114,11 +138,17 @@ def build_site(config: Config, root: Path) -> BuildResult:
             render_category_index(
                 cats, base, emit_tags=config.emit_tags, emit_archive=config.emit_archive
             ),
+            category_index_url(base),
             result,
         )
         for cat, cat_posts in cats.items():
             page = render_category(cat, cat_posts, base)
-            _write(out_dir / "categories" / slugify(cat) / "index.md", page, result)
+            _write(
+                out_dir / "categories" / slugify(cat) / "index.md",
+                page,
+                category_url(base, cat),
+                result,
+            )
 
     if config.emit_feed and config.site_url:
         render = make_renderer(root, config)
@@ -128,6 +158,14 @@ def build_site(config: Config, root: Path) -> BuildResult:
         feed_file.write_text(feed_xml, encoding="utf-8")
         result.written.append(feed_file)
         result.feed_path = feed_file
+
+    # A sitemap needs absolute locations, so it shares the feed's site_url gate.
+    if config.emit_sitemap and config.site_url:
+        sitemap_xml = build_sitemap(config, result.page_urls)
+        sitemap_file = out_dir / "sitemap.xml"
+        sitemap_file.write_text(sitemap_xml, encoding="utf-8")
+        result.written.append(sitemap_file)
+        result.sitemap_path = sitemap_file
 
     return result
 
@@ -139,7 +177,8 @@ def _read_intro(path: Path) -> str:
     return body.strip()
 
 
-def _write(path: Path, content: str, result: BuildResult) -> None:
+def _write(path: Path, content: str, url: str, result: BuildResult) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     result.written.append(path)
+    result.page_urls.append(url)

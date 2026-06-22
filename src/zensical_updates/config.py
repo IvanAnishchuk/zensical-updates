@@ -30,6 +30,7 @@ class Config:
     language: str = "en"
     emit_feed: bool = True
     feed_limit: int = 0
+    emit_sitemap: bool = True
 
     @property
     def url_base(self) -> str:
@@ -76,4 +77,5 @@ def load_config(path: Path) -> Config:
         language=str(project.get("language", d.language)),
         emit_feed=bool(table.get("emit_feed", d.emit_feed)),
         feed_limit=int(table.get("feed_limit", d.feed_limit)),
+        emit_sitemap=bool(table.get("emit_sitemap", d.emit_sitemap)),
     )

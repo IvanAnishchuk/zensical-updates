@@ -22,3 +22,8 @@ def test_build_feed_and_feederror_are_public() -> None:
     assert "FeedError" in lib.__all__
     assert hasattr(lib, "build_feed")
     assert hasattr(lib, "FeedError")
+
+
+def test_build_sitemap_is_public() -> None:
+    assert "build_sitemap" in lib.__all__
+    assert hasattr(lib, "build_sitemap")

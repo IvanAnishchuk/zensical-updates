@@ -76,3 +76,15 @@ def test_feed_config_defaults() -> None:
     assert cfg.feed_limit == 0
     assert cfg.language == "en"
     assert cfg.site_name == ""
+
+
+def test_load_config_reads_emit_sitemap(tmp_path: Path) -> None:
+    (tmp_path / "zensical.toml").write_text(
+        "[project.extra.zensical_updates]\nemit_sitemap = false\n",
+        encoding="utf-8",
+    )
+    assert load_config(tmp_path / "zensical.toml").emit_sitemap is False
+
+
+def test_emit_sitemap_defaults_true() -> None:
+    assert Config().emit_sitemap is True

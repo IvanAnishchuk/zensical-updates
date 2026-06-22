@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- A sitemap for the generated section. With `site_url` set, the build writes
+  `docs/<base>/sitemap.xml` listing every generated page (the section index, each
+  post, and the taxonomy and archive pages you enable), so the content is in a
+  sitemap a crawler can read. zensical's own sitemap covers its `nav` pages only.
+  The new `emit_sitemap` config key (default `true`) toggles it, and the CLI warns
+  when it is skipped for a missing `site_url`, the same as the feed. `build_sitemap`
+  is exported as part of the public API.
+
 ### Changed
 
 - `uv.lock` is now the single source of truth for dependencies.

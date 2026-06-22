@@ -11,6 +11,7 @@ from zensical_updates.build import BuildResult, build_site, clean_site
 from zensical_updates.config import Config, load_config
 from zensical_updates.feed import FeedError, build_feed
 from zensical_updates.model import Post, PostError, discover_posts, load_post
+from zensical_updates.sitemap import build_sitemap
 
 __version__ = version("zensical-updates")
 
@@ -22,6 +23,7 @@ __all__ = [
     "PostError",
     "build_feed",
     "build_site",
+    "build_sitemap",
     "clean_site",
     "discover_posts",
     "load_config",

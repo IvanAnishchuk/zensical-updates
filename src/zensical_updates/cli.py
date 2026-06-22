@@ -49,6 +49,10 @@ def build(root: _RootOption = Path(), config: _ConfigOption = None) -> None:
         console.print(
             "[yellow]warning:[/yellow] RSS feed skipped: set site_url in zensical.toml to enable it"
         )
+    if cfg.emit_sitemap and not cfg.site_url:
+        console.print(
+            "[yellow]warning:[/yellow] sitemap skipped: set site_url in zensical.toml to enable it"
+        )
     console.print(
         f"Wrote {len(result.written)} files ({len(result.post_urls)} posts) -> {result.out_dir}"
     )

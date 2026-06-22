@@ -80,6 +80,22 @@ emit_feed = true   # generate feed.xml (default)
 feed_limit = 0     # max items, 0 means no cap (default)
 ```
 
+## Sitemap
+
+With `site_url` set, the build writes a sitemap to `docs/<base>/sitemap.xml`,
+served at `<site_url>/<base>/sitemap.xml` (for the default section,
+`/updates/sitemap.xml`). It lists every page the build generates: the section
+index, each post, and whichever taxonomy and archive pages you enable. zensical
+writes its own sitemap for the pages in `nav` only, so the generated section is
+otherwise missing from any sitemap, and a crawler never reaches the posts. The
+locations are fully-qualified, so the sitemap needs `site_url` for the reason the
+feed does, and the build prints a warning and skips it without one.
+
+```toml
+[project.extra.zensical_updates]
+emit_sitemap = true   # generate sitemap.xml (default)
+```
+
 ## Taxonomy pages
 
 The Tags and Categories index pages list their terms as a frequency-ordered
