@@ -60,6 +60,10 @@ With that set, a post link becomes `/eth-protocol-fellowship/updates/foo/`. The
 files on disk still live at `docs/<base>/`; only the URLs gain the prefix. A
 root-served site (no `site_url`, or one with no path) gets plain `/updates/foo/`.
 
+`site_url` also gates the `feed.xml` and `sitemap.xml` the build writes for the
+section. Both carry fully-qualified URLs, so the build prints a warning and skips
+them when `site_url` is absent.
+
 ## Build
 
 ```bash

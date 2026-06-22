@@ -4,11 +4,15 @@ from dataclasses import replace
 from pathlib import Path
 
 import feedparser
+import lxml.etree  # ty: ignore[unresolved-import]
 import pytest
 
 from zensical_updates import load_config
 from zensical_updates.build import build_site, clean_site
 from zensical_updates.config import Config
+from zensical_updates.urls import absolute_url
+
+_SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
 
 def _write_post(
@@ -167,3 +171,90 @@ def test_build_respects_feed_limit(tmp_path: Path) -> None:
     build_site(cfg, tmp_path)
     parsed = feedparser.parse((tmp_path / "docs" / "updates" / "feed.xml").read_text("utf-8"))
     assert len(parsed.entries) == limit
+
+
+def test_build_writes_sitemap_when_site_url_set(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", categories=("weekly-update",), tags=("epf",))
+    cfg = Config(site_url="https://example.github.io/repo/", emit_feed=False)
+    result = build_site(cfg, tmp_path)
+    out = tmp_path / "docs" / "updates"
+    assert result.sitemap_path is not None
+    assert result.sitemap_path == out / "sitemap.xml"
+    assert result.sitemap_path.exists()
+    assert "https://example.github.io/repo/updates/hello/" in result.sitemap_path.read_text("utf-8")
+
+
+def test_build_skips_sitemap_without_site_url(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    _write_post(src, "hello", "2026-06-11")
+    result = build_site(Config(), tmp_path)  # no site_url, so no absolute locations
+    assert result.sitemap_path is None
+    assert not (tmp_path / "docs" / "updates" / "sitemap.xml").exists()
+
+
+def test_build_can_disable_the_sitemap(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    _write_post(src, "hello", "2026-06-11")
+    cfg = Config(site_url="https://example.github.io/repo/", emit_feed=False, emit_sitemap=False)
+    result = build_site(cfg, tmp_path)
+    assert result.sitemap_path is None
+    assert not (tmp_path / "docs" / "updates" / "sitemap.xml").exists()
+
+
+def test_build_records_page_urls_for_every_generated_page(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", categories=("weekly-update",), tags=("epf",))
+    result = build_site(Config(emit_feed=False), tmp_path)
+    assert result.page_urls == [
+        "/updates/hello/",
+        "/updates/",
+        "/updates/archive/",
+        "/updates/archive/2026/",
+        "/updates/tags/",
+        "/updates/tags/epf/",
+        "/updates/categories/",
+        "/updates/categories/weekly-update/",
+    ]
+    md_pages = [path for path in result.written if path.suffix == ".md"]
+    assert len(result.page_urls) == len(md_pages)  # one recorded URL per written page
+
+
+def test_build_page_urls_honor_disabled_taxonomies(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", tags=("epf",), categories=("news",))
+    cfg = Config(emit_tags=False, emit_categories=False, emit_archive=False, emit_feed=False)
+    result = build_site(cfg, tmp_path)
+    assert result.page_urls == ["/updates/hello/", "/updates/"]
+
+
+def test_build_page_urls_carry_the_site_subpath(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", tags=("epf",))
+    cfg = Config(site_url="https://example.github.io/repo/", emit_feed=False)
+    result = build_site(cfg, tmp_path)
+    assert "/repo/updates/hello/" in result.page_urls
+    assert "/repo/updates/tags/epf/" in result.page_urls
+
+
+def test_sitemap_lists_exactly_the_recorded_page_urls(tmp_path: Path) -> None:
+    src = tmp_path / "updates"
+    src.mkdir()
+    (src / "index.md").write_text("# Updates\n\nWelcome.\n", encoding="utf-8")
+    _write_post(src, "hello", "2026-06-11", categories=("weekly-update",), tags=("epf",))
+    cfg = Config(site_url="https://example.github.io/repo/", emit_feed=False)
+    result = build_site(cfg, tmp_path)
+    out = tmp_path / "docs" / "updates"
+    root = lxml.etree.fromstring((out / "sitemap.xml").read_bytes())
+    locs = [el.text for el in root.iter(f"{{{_SITEMAP_NS}}}loc")]
+    assert locs == [absolute_url(cfg.site_url, url) for url in result.page_urls]
