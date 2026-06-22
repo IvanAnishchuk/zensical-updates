@@ -1,6 +1,6 @@
 """Tests for the Updates section sitemap."""
 
-import lxml.etree  # ty: ignore[unresolved-import]
+import lxml.etree  # ty: ignore[unresolved-import]  # ty can't resolve lxml's compiled etree module
 
 from zensical_updates.config import Config
 from zensical_updates.sitemap import build_sitemap, render_sitemap

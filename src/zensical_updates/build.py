@@ -46,9 +46,10 @@ from zensical_updates.urls import (
 class BuildResult:
     """What a build produced: the output dir, files written, and page URLs.
 
-    ``page_urls`` is the site-absolute URL of every page written, recorded as it
-    is written so the sitemap lists exactly what the build produced. ``post_urls``
-    is the post subset of it.
+    ``page_urls`` is the site-absolute URL of every generated content page (the
+    index, each post, and the archive and taxonomy pages), recorded as it is
+    written so the sitemap lists exactly those. The feed and sitemap files land in
+    ``written`` but not here. ``post_urls`` is the post subset.
     """
 
     out_dir: Path

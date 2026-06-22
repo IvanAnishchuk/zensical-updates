@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   post, and the taxonomy and archive pages you enable), so the content is in a
   sitemap a crawler can read. zensical's own sitemap covers its `nav` pages only.
   The new `emit_sitemap` config key (default `true`) toggles it, and the CLI warns
-  when it is skipped for a missing `site_url`, the same as the feed.
+  when it is skipped for a missing `site_url`, the same as the feed. `build_sitemap`
+  is exported as part of the public API.
 
 ### Changed
 

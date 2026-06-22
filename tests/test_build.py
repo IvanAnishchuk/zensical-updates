@@ -4,7 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import feedparser
-import lxml.etree  # ty: ignore[unresolved-import]
+import lxml.etree  # ty: ignore[unresolved-import]  # ty can't resolve lxml's compiled etree module
 import pytest
 
 from zensical_updates import load_config

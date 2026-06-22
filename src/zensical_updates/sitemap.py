@@ -12,7 +12,7 @@ the caller and no wall-clock value is written.
 
 from collections.abc import Sequence
 
-import lxml.etree  # ty: ignore[unresolved-import]
+import lxml.etree  # ty: ignore[unresolved-import]  # ty can't resolve lxml's compiled etree module
 
 from zensical_updates.config import Config
 from zensical_updates.urls import absolute_url
