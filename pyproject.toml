@@ -1,6 +1,6 @@
 [project]
 name = "zensical-updates"
-version = "0.1.5"
+version = "0.1.6"
 description = "Generate a dated Updates (blog) section for zensical sites as plain Markdown"
 readme = "README.md"
 license = "CC0-1.0"
