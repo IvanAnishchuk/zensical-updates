@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-06-23
+
 ### Added
 
 - A sitemap for the generated section. With `site_url` set, the build writes
