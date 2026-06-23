@@ -52,6 +52,7 @@ dev = [
     "types-pyyaml>=6.0.12.20260518",
     "zensical>=0.0.45",
     "feedparser>=6.0",
+    "types-lxml>=2026.2.16",
 ]
 docs = [
     "zensical>=0.0.40",
@@ -177,5 +178,5 @@ exclude_lines = [
 ]
 
 [[tool.mypy.overrides]]
-module = ["feedgen.*", "lxml.*", "zensical.*", "feedparser"]
+module = ["feedgen.*", "zensical.*", "feedparser"]
 ignore_missing_imports = true
