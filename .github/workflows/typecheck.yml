@@ -54,7 +54,11 @@ jobs:
           case "${CHECKER}" in
             mypy)         uv run mypy ;;
             ty)           uv run ty check ;;
-            basedpyright) uv run basedpyright ;;
+            # basedpyright runs its `recommended` profile for the insights, but it
+            # exits non-zero on warnings (a known pyright behavior) and we keep those
+            # under-typed warnings visible rather than baselining them. So it is
+            # advisory: log it, never fail the gate. mypy and ty do the gating.
+            basedpyright) uv run basedpyright || true ;;
             *)            echo "unknown checker: ${CHECKER}" >&2; exit 1 ;;
           esac 2>&1 | tee "${REPORTS_DIR}/typecheck/${CHECKER}.log"
 

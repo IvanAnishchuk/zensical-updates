@@ -13,12 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   untyped. The `# ty: ignore[unresolved-import]` comments and the `str()` cast in
   `sitemap.py` are gone, and lxml no longer rides the mypy `ignore_missing_imports`
   override. Internal only; no API or output change.
-- Tightened the type-check configuration. basedpyright runs its `recommended`
-  profile (under-typed spots surface as warnings; the gate stays on errors), mypy
+- Tightened the type-check configuration. mypy and ty do the gating, and mypy
   gains `warn_unreachable`, `extra_checks`, `strict_bytes`, `local_partial_types`,
-  and `disallow_any_unimported`, and `zensical` (which ships `py.typed`) comes off
-  the mypy override. Only `feedgen` and `feedparser`, which have no stubs, remain.
-  Internal only.
+  and `disallow_any_unimported`. basedpyright runs its `recommended` profile as an
+  advisory check: its warnings flag under-typed spots but never fail the gate
+  (pyright exits non-zero on warnings, so it logs and does not block). `zensical`
+  (which ships `py.typed`) comes off the mypy override; only `feedgen` and
+  `feedparser`, which have no stubs, remain. Internal only.
 - Upgraded locked dependencies (`uv lock --upgrade`).
 
 ## [0.1.6] - 2026-06-23
