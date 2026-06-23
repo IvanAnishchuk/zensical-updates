@@ -12,7 +12,7 @@ the caller and no wall-clock value is written.
 
 from collections.abc import Sequence
 
-import lxml.etree  # ty: ignore[unresolved-import]  # ty can't resolve lxml's compiled etree module
+import lxml.etree
 
 from zensical_updates.config import Config
 from zensical_updates.urls import absolute_url
@@ -35,7 +35,7 @@ def render_sitemap(site_url: str, paths: Sequence[str]) -> str:
     document = lxml.etree.tostring(
         urlset, xml_declaration=True, encoding="utf-8", pretty_print=True
     )
-    return str(document.decode("utf-8"))
+    return document.decode("utf-8")
 
 
 def build_sitemap(config: Config, page_urls: Sequence[str]) -> str:
