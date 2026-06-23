@@ -136,11 +136,20 @@ strict = true
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
+warn_unreachable = true
+extra_checks = true
+strict_bytes = true
+local_partial_types = true
+disallow_any_unimported = true
 
 [tool.basedpyright]
 pythonVersion = "3.14"
 include = ["src", "tests"]
-typeCheckingMode = "standard"
+# "recommended" is basedpyright's strictest profile. It flags under-typed spots
+# (Any from untyped feedgen/feedparser, unused call results) as warnings, not
+# errors, so CI stays green while the gaps stay visible to pay down with casts and
+# stubs over time. Don't silence the rules; pay down the warnings instead.
+typeCheckingMode = "recommended"
 reportMissingTypeStubs = false
 
 [tool.ty.environment]
@@ -178,5 +187,5 @@ exclude_lines = [
 ]
 
 [[tool.mypy.overrides]]
-module = ["feedgen.*", "zensical.*", "feedparser"]
+module = ["feedgen.*", "feedparser"]
 ignore_missing_imports = true
