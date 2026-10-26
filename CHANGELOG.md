@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped every SHA-pinned GitHub Action to its latest release, including
+  majors for `actions/cache` (6), `astral-sh/setup-uv` (10) and
+  `python-coverage-comment-action` (4). `pypa/gh-action-pypi-publish` 1.14.3
+  accepts the `Metadata-Version: 2.5` wheels current hatchling builds; 1.14.0
+  rejected them and blocked the 0.1.7 upload.
+
 ## [0.1.7] - 2026-10-26
 
 ### Fixed
