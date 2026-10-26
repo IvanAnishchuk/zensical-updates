@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-10-26
+
+Ships the 0.1.7 changes below to PyPI; 0.1.7 itself was tagged but never
+published.
+
 ### Changed
 
 - Bumped every SHA-pinned GitHub Action to its latest release, including
@@ -15,7 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   accepts the `Metadata-Version: 2.5` wheels current hatchling builds; 1.14.0
   rejected them and blocked the 0.1.7 upload.
 
-## [0.1.7] - 2026-10-26
+## [0.1.7] - 2026-10-26 [YANKED]
+
+Tagged only; the PyPI upload failed (see 0.1.8).
 
 ### Fixed
 
