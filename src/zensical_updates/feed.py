@@ -78,14 +78,14 @@ def resolve_source_links(html: str, source_dir_url: str) -> str:
     the HTML the feed gets still carries the URIs as written in the post.
     ``source_dir_url`` is the absolute URL of the directory holding the post's
     source file. Links to ``.md`` files become the directory URLs zensical serves.
-    Absolute, root-relative and fragment-only links are left alone.
+    Absolute, root-relative, query-only and fragment-only links are left alone.
     """
     if not html.strip():
         return html
     fragment = lxml.html.fragment_fromstring(html, create_parent=True)
 
     def resolve(link: str) -> str:
-        if not link or link.startswith(("#", "/")) or urlsplit(link).scheme:
+        if not link or link.startswith(("#", "?", "/")) or urlsplit(link).scheme:
             return link
         return urljoin(source_dir_url, _page_uri(link))
 

@@ -89,6 +89,7 @@ _SOURCE_DIR = "https://example.github.io/repo/updates/"
         ("https://other.org/a.md", "https://other.org/a.md"),
         ("/at-root/", "/at-root/"),
         ("#frag", "#frag"),
+        ("?view=compact", "?view=compact"),
         ("mailto:a@b.c", "mailto:a@b.c"),
     ],
 )

@@ -31,7 +31,7 @@ def export(*, include_dev: bool) -> str:
     cmd = [
         "uv",
         "export",
-        "--frozen",
+        "--locked",
         "--format",
         "requirements-txt",
         "--no-emit-project",
