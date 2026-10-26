@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import click
 from typer.testing import CliRunner
 
 import zensical_updates as lib
@@ -13,7 +14,8 @@ runner = CliRunner()
 def test_version() -> None:
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert lib.__version__ in result.output
+    # rich highlights the digits when color is forced; compare the plain text.
+    assert lib.__version__ in click.unstyle(result.output)
 
 
 def test_info() -> None:

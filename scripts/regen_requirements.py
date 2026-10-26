@@ -28,7 +28,16 @@ logger = logging.getLogger(__name__)
 
 def export(*, include_dev: bool) -> str:
     """Return uv-exported requirements text for one dependency set."""
-    cmd = ["uv", "export", "--format", "requirements-txt", "--no-emit-project"]
+    cmd = [
+        "uv",
+        "export",
+        "--frozen",
+        "--format",
+        "requirements-txt",
+        "--no-emit-project",
+        "--no-header",
+        "--no-annotate",
+    ]
     if not include_dev:
         cmd.append("--no-dev")
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT, check=False)  # noqa: S603
