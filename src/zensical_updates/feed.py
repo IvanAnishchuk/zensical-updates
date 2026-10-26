@@ -10,6 +10,7 @@ import datetime
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
+from urllib.parse import urljoin, urlsplit, urlunsplit
 
 import lxml.html
 
@@ -53,6 +54,43 @@ def absolutize_html(html: str, base_url: str) -> str:
         fragment.remove(heading)
     fragment.make_links_absolute(base_url, resolve_base_href=False)
     return _inner_html(fragment).strip()
+
+
+def _page_uri(uri: str) -> str:
+    """Map a Markdown file URI to its directory URL (``a.md`` -> ``a/``).
+
+    Mirrors zensical with ``use_directory_urls`` on: ``index.md`` maps to its
+    directory. Other URIs, and any query or fragment, pass through unchanged.
+    """
+    parts = urlsplit(uri)
+    if parts.scheme or parts.netloc or not parts.path.endswith(".md"):
+        return uri
+    head, _, name = parts.path.rpartition("/")
+    directory = f"{head}/" if head else ""
+    path = directory if name == "index.md" else f"{directory}{name[:-3]}/"
+    return urlunsplit(parts._replace(path=path or "./"))
+
+
+def resolve_source_links(html: str, source_dir_url: str) -> str:
+    """Resolve raw source-relative Markdown URIs against ``source_dir_url``.
+
+    zensical resolves page URLs in Rust after its Python ``render()`` returns, so
+    the HTML the feed gets still carries the URIs as written in the post.
+    ``source_dir_url`` is the absolute URL of the directory holding the post's
+    source file. Links to ``.md`` files become the directory URLs zensical serves.
+    Absolute, root-relative and fragment-only links are left alone.
+    """
+    if not html.strip():
+        return html
+    fragment = lxml.html.fragment_fromstring(html, create_parent=True)
+
+    def resolve(link: str) -> str:
+        if not link or link.startswith(("#", "/")) or urlsplit(link).scheme:
+            return link
+        return urljoin(source_dir_url, _page_uri(link))
+
+    fragment.rewrite_links(resolve, resolve_base_href=False)
+    return _inner_html(fragment)
 
 
 def _to_datetime(day: datetime.date) -> datetime.datetime:
@@ -103,7 +141,7 @@ def build_feed(config: Config, posts: Sequence[Post], render: Callable[[Post], s
     return str(generator.rss_str(pretty=True).decode("utf-8"))
 
 
-_SUPPORTED_ZENSICAL = "zensical >=0.0.45,<0.1.0"
+_SUPPORTED_ZENSICAL = "zensical >=0.0.72,<0.1.0"
 
 
 def make_renderer(root: Path, config: Config) -> Callable[[Post], str]:
@@ -123,6 +161,8 @@ def make_renderer(root: Path, config: Config) -> Callable[[Post], str]:
     parse_config = _zensical_parse_config
     render_markdown = _zensical_render
     parse_config(str(toml_path))
+    # Every post source sits directly in the Updates directory.
+    source_dir_url = absolute_url(config.site_url, f"/{config.url_base}/")
 
     def render(post: Post) -> str:
         url = f"{config.base}/{post.slug}/"
@@ -132,6 +172,7 @@ def make_renderer(root: Path, config: Config) -> Callable[[Post], str]:
         except Exception as exc:  # broad except: wrap any internal-API failure
             msg = f"zensical render failed (supported: {_SUPPORTED_ZENSICAL}): {exc}"
             raise FeedError(msg) from exc
+        html = resolve_source_links(html, source_dir_url)
         post_abs = absolute_url(config.site_url, post_url(config.url_base, post.slug))
         return absolutize_html(html, post_abs)
 

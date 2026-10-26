@@ -8,7 +8,13 @@ import feedparser
 import pytest
 
 from zensical_updates.config import Config, load_config
-from zensical_updates.feed import FeedError, absolutize_html, build_feed, make_renderer
+from zensical_updates.feed import (
+    FeedError,
+    absolutize_html,
+    build_feed,
+    make_renderer,
+    resolve_source_links,
+)
 from zensical_updates.model import Post
 
 
@@ -66,6 +72,38 @@ def test_absolutize_keeps_text_after_a_stripped_h1() -> None:
 
 def test_absolutize_empty_returns_empty() -> None:
     assert absolutize_html("", "https://example.com/") == ""
+
+
+_SOURCE_DIR = "https://example.github.io/repo/updates/"
+
+
+@pytest.mark.parametrize(
+    ("link", "expected"),
+    [
+        ("other.md", "https://example.github.io/repo/updates/other/"),
+        ("other.md#part", "https://example.github.io/repo/updates/other/#part"),
+        ("../about.md", "https://example.github.io/repo/about/"),
+        ("../index.md", "https://example.github.io/repo/"),
+        ("../slides/deck.pdf", "https://example.github.io/repo/slides/deck.pdf"),
+        ("img/pic.png", "https://example.github.io/repo/updates/img/pic.png"),
+        ("https://other.org/a.md", "https://other.org/a.md"),
+        ("/at-root/", "/at-root/"),
+        ("#frag", "#frag"),
+        ("mailto:a@b.c", "mailto:a@b.c"),
+    ],
+)
+def test_resolve_source_links(link: str, expected: str) -> None:
+    out = resolve_source_links(f'<p><a href="{link}">x</a></p>', _SOURCE_DIR)
+    assert f'href="{expected}"' in out
+
+
+def test_resolve_source_links_rewrites_image_sources() -> None:
+    out = resolve_source_links('<p><img src="../img/a.png"></p>', _SOURCE_DIR)
+    assert 'src="https://example.github.io/repo/img/a.png"' in out
+
+
+def test_resolve_source_links_empty_returns_input() -> None:
+    assert resolve_source_links("  ", _SOURCE_DIR) == "  "
 
 
 def test_build_feed_parses_clean_with_feedparser() -> None:
@@ -162,6 +200,24 @@ def test_make_renderer_returns_absolutized_html(tmp_path: Path) -> None:
     render = make_renderer(tmp_path, cfg)
     html = render(_post("hello", "2026-06-11", body="See [other](other.md) for more."))
     assert "https://example.github.io/repo/updates/other/" in html
+
+
+def test_make_renderer_resolves_parent_links_against_the_source(tmp_path: Path) -> None:
+    # A source-relative "../" link climbs out of the Updates directory, which is one
+    # level above the post's own page directory.
+    (tmp_path / "docs" / "updates").mkdir(parents=True)
+    (tmp_path / "zensical.toml").write_text(
+        "[project]\n"
+        'site_name = "S"\n'
+        'site_url = "https://example.github.io/repo/"\n'
+        'docs_dir = "docs"\n'
+        'site_dir = "site"\n',
+        encoding="utf-8",
+    )
+    cfg = load_config(tmp_path / "zensical.toml")
+    render = make_renderer(tmp_path, cfg)
+    html = render(_post("hello", "2026-06-11", body="The [deck](../slides/deck.pdf)."))
+    assert 'href="https://example.github.io/repo/slides/deck.pdf"' in html
 
 
 def test_make_renderer_raises_a_feed_error_when_zensical_is_unavailable(

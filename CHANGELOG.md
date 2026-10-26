@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Feed links written relative to the post source resolve to the right URL again.
+  zensical 0.0.72 moved URL resolution out of the Python `render()` the feed calls,
+  so a `../slides/deck.pdf` link landed one directory too deep. The feed now
+  resolves source-relative URIs itself, mapping `.md` targets to their directory
+  URLs.
+
 ### Changed
+
+- Requires zensical `>=0.0.72`, and raises every other dependency floor to the
+  newly locked versions.
 
 - lxml is now type-checked through `types-lxml` stubs instead of being treated as
   untyped. The `# ty: ignore[unresolved-import]` comments and the `str()` cast in

@@ -19,12 +19,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "typer>=0.15",
-    "rich>=13.0",
+    "typer>=0.27.3",
+    "rich>=15.0",
     "pyyaml>=6.0.3",
-    "zensical>=0.0.45,<0.1.0",
+    # 0.0.72 moved URL resolution out of the Python render() the feed calls.
+    "zensical>=0.0.72,<0.1.0",
     "feedgen>=1.0,<2.0",
-    "lxml>=5.0",
+    "lxml>=6.1.3",
 ]
 
 [project.urls]
@@ -40,24 +41,24 @@ zensical-updates = "zensical_updates.cli:app"
 
 [dependency-groups]
 dev = [
-    "ruff>=0.11",
-    "mypy>=1.13",
-    "ty",
-    "basedpyright>=1.21",
-    "pytest>=8.0",
-    "pytest-cov>=6.0",
-    "pip-audit>=2.7",
-    "pre-commit>=4.0",
-    "zizmor>=1.0",
-    "types-pyyaml>=6.0.12.20260518",
-    "zensical>=0.0.45",
-    "feedparser>=6.0",
+    "ruff>=0.17.2",
+    "mypy>=2.4",
+    "ty>=0.0.92",
+    "basedpyright>=1.40.2",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1",
+    "pip-audit>=2.10.1",
+    "pre-commit>=4.7",
+    "zizmor>=1.31.1",
+    "types-pyyaml>=6.0.12.20260906",
+    "zensical>=0.0.72",
+    "feedparser>=6.0.14",
     "types-lxml>=2026.2.16",
 ]
 docs = [
-    "zensical>=0.0.40",
-    "mkdocstrings-python>=2.0",
-    "mkdocs-typer2[zensical]>=0.4.0",
+    "zensical>=0.0.72",
+    "mkdocstrings-python>=2.0.10",
+    "mkdocs-typer2[zensical]>=0.4.1",
 ]
 
 [build-system]
