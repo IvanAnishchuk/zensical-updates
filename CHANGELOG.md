@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-10-26
+
 ### Fixed
 
 - Feed links written relative to the post source resolve to the right URL again.
